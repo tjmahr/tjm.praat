@@ -1,0 +1,30 @@
+# Example usage
+
+```{r, eval = TRUE, comment = "#>", collapse = TRUE}
+library(tjm.praat)
+library(purrr)
+library(readtextgrid)
+
+# Use the PATH to find praat
+praat_path <- Sys.which("praat")
+
+# Locate some wav files
+
+dir <- system.file("demo-textgrids/", package = "tjm.praat")
+wavs <- list.files(dir, pattern = ".wav", full.names = TRUE)
+
+# Put the resulting textgrids into a temporary folder
+tgs <- file.path(tempdir(), basename(set_textgrid_ext(wavs)))
+
+f_create_silences_textgrid <- wrap_praat_script(
+  praat_location = praat_path,
+  script_code_to_run = create_silences_textgrid,
+  return = "last-argument"
+)
+
+# Apply the function to each wav file and read into R
+map2_chr(wavs, tgs, f_create_silences_textgrid) %>%
+  map_df(read_textgrid)
+```
+
+
