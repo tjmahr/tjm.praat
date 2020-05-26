@@ -17,7 +17,10 @@ Read from file: textgrid_in$
 tiers = Get number of tiers
 @setDuplicatePosition: duplicate_position$, findNumberForTier.result, tiers
 
-Duplicate tier: findNumberForTier.result, setDuplicatePosition.result, duplicate_name$
+Duplicate tier:
+... findNumberForTier.result,
+... setDuplicatePosition.result,
+... duplicate_name$
 
 Save as text file: textgrid_out$
 

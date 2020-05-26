@@ -82,3 +82,24 @@ set_textgrid_ext <- function(xs) {
 #'
 #' @includeRmd inst/demos/duplicate_tier.Rmd
 "duplicate_tier"
+
+
+#' Convert a textgrid tier into a "silences" tier
+#'
+#' Interval text that matches the silence pattern is replaced with `"silent"`.
+#' All others are replaced with `"sounding"`.
+#'
+#' @format A Praat script
+#' \describe{
+#'   \item{textgrid_in}{path of the textgrid file to read in}
+#'   \item{target_tier}{tier to copy}
+#'   \item{silence_regex}{regular expression (regex) used to indentify
+#'   silences. Current default is `^$|sil|sp` which treats empty strings (`^$`)
+#'   or (`|`) a string containing `sil` or a string containing `sp` as
+#'   silences.}
+#'   \item{textgrid_out}{path of the textgrid file to create}
+#' }
+#'
+#' @includeRmd inst/demos/convert_tier_to_silences.Rmd
+"convert_tier_to_silences"
+

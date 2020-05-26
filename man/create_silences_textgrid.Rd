@@ -56,7 +56,7 @@ map2_chr(wavs, tgs, f_create_silences_textgrid) \%>\%
 }
 
 \section{Praat source code}{
-\preformatted{form Make silence text grid
+\preformatted{form Make silence textgrid
     sentence Wav_file_in
     sentence Textgrid_out
 endform

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Duplicate a textgrid tier — duplicate_tier • tjm.praat</title>
+<title>Convert a textgrid tier into a "silences" tier — convert_tier_to_silences • tjm.praat</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Duplicate a textgrid tier — duplicate_tier" />
-<meta property="og:description" content="Duplicate (and rename) a textgrid tier." />
+<meta property="og:title" content="Convert a textgrid tier into a "silences" tier — convert_tier_to_silences" />
+<meta property="og:description" content="Interval text that matches the silence pattern is replaced with &quot;silent&quot;.
+All others are replaced with &quot;sounding&quot;." />
 
 
 
@@ -108,16 +109,17 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Duplicate a textgrid tier</h1>
+    <h1>Convert a textgrid tier into a "silences" tier</h1>
     <small class="dont-index">Source: <a href='https://github.com/tjmahr/tjm.praat/blob/master/R/main.R'><code>R/main.R</code></a></small>
-    <div class="hidden name"><code>duplicate_tier.Rd</code></div>
+    <div class="hidden name"><code>convert_tier_to_silences.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Duplicate (and rename) a textgrid tier.</p>
+    <p>Interval text that matches the silence pattern is replaced with <code>"silent"</code>.
+All others are replaced with <code>"sounding"</code>.</p>
     </div>
 
-    <pre class="usage"><span class='no'>duplicate_tier</span></pre>
+    <pre class="usage"><span class='no'>convert_tier_to_silences</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
@@ -125,9 +127,10 @@
     <p>A Praat script</p><dl>
 <dt>textgrid_in</dt><dd><p>path of the textgrid file to read in</p></dd>
 <dt>target_tier</dt><dd><p>tier to copy</p></dd>
-<dt>duplicate_name</dt><dd><p>name to use for the duplicated tier</p></dd>
-<dt>duplicate_position</dt><dd><p>where to place the new tier: <code>last</code> (default),
-<code>first</code>, <code>before</code> or <code>after</code> the original.</p></dd>
+<dt>silence_regex</dt><dd><p>regular expression (regex) used to indentify
+silences. Current default is <code>^$|sil|sp</code> which treats empty strings (<code>^$</code>)
+or (<code>|</code>) a string containing <code>sil</code> or a string containing <code>sp</code> as
+silences.</p></dd>
 <dt>textgrid_out</dt><dd><p>path of the textgrid file to create</p></dd>
 
 </dl>
@@ -135,7 +138,7 @@
     <h2 class="hasAnchor" id="example-usage"><a class="anchor" href="#example-usage"></a>Example usage</h2>
 
     <p><div class="r"></p><pre><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>tjm.praat</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>magrittr</span>, <span class='kw'>warn.conflicts</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>magrittr</span>)
 
 <span class='co'># Use the PATH to find praat</span>
 <span class='no'>praat_path</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.which.html'>Sys.which</a></span>(<span class='st'>"praat"</span>)
@@ -147,93 +150,70 @@
 
 <span class='no'>tg_out</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='st'>"test"</span>, <span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".TextGrid"</span>)
 
-<span class='co'># Note that there are three tiers</span>
-<span class='no'>tg</span> <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>readtextgrid</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/readtextgrid/man/read_textgrid.html'>read_textgrid</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>magrittr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/magrittr/man/aliases.html'>extract</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tier_num"</span>, <span class='st'>"tier_name"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>()
-<span class='co'>#&gt; # A tibble: 3 x 2</span>
-<span class='co'>#&gt;   tier_num tier_name</span>
-<span class='co'>#&gt;      &lt;dbl&gt; &lt;chr&gt;    </span>
-<span class='co'>#&gt; 1        1 words    </span>
-<span class='co'>#&gt; 2        2 phones   </span>
-<span class='co'>#&gt; 3        3 silence</span>
+<span class='co'># We have the phonemes and silences in "bird house"</span>
+<span class='no'>tg_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>readtextgrid</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/readtextgrid/man/read_textgrid.html'>read_textgrid</a></span>(<span class='no'>tg</span>)
+<span class='no'>tg_data</span>[<span class='no'>tg_data</span>$<span class='no'>tier_num</span> <span class='kw'>==</span> <span class='fl'>2</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tier_name"</span>, <span class='st'>"xmin"</span>, <span class='st'>"xmax"</span>, <span class='st'>"text"</span>)]
+<span class='co'>#&gt; # A tibble: 10 x 4</span>
+<span class='co'>#&gt;    tier_name  xmin  xmax text </span>
+<span class='co'>#&gt;    &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
+<span class='co'>#&gt;  1 phones     0     0.25 "sil"</span>
+<span class='co'>#&gt;  2 phones     0.25  0.35 "B"  </span>
+<span class='co'>#&gt;  3 phones     0.35  0.49 "ER1"</span>
+<span class='co'>#&gt;  4 phones     0.49  0.52 "D"  </span>
+<span class='co'>#&gt;  5 phones     0.52  0.55 "sp" </span>
+<span class='co'>#&gt;  6 phones     0.55  0.59 "HH" </span>
+<span class='co'>#&gt;  7 phones     0.59  1.04 "AW1"</span>
+<span class='co'>#&gt;  8 phones     1.04  1.16 "S"  </span>
+<span class='co'>#&gt;  9 phones     1.16  1.39 "sp" </span>
+<span class='co'>#&gt; 10 phones     1.39  1.41 ""</span>
 
-<span class='no'>f_duplicate_tier</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='wrap_praat_script.html'>wrap_praat_script</a></span>(
+<span class='no'>f_convert_tier_to_silences</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='wrap_praat_script.html'>wrap_praat_script</a></span>(
   <span class='kw'>praat_location</span> <span class='kw'>=</span> <span class='no'>praat_path</span>,
-  <span class='kw'>script_code_to_run</span> <span class='kw'>=</span> <span class='no'>duplicate_tier</span>,
+  <span class='kw'>script_code_to_run</span> <span class='kw'>=</span> <span class='no'>convert_tier_to_silences</span>,
   <span class='kw'>return</span> <span class='kw'>=</span> <span class='st'>"last-argument"</span>
 )
 
-<span class='no'>tg_out</span> <span class='kw'>&lt;-</span> <span class='no'>tg</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>f_duplicate_tier</span>(<span class='st'>"phones"</span>, <span class='st'>"duplicate-is-first"</span>, <span class='st'>"first"</span>, <span class='no'>tg_out</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>f_duplicate_tier</span>(<span class='st'>"phones"</span>, <span class='st'>"duplicate-is-last"</span>, <span class='st'>"last"</span>, <span class='no'>tg_out</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>f_duplicate_tier</span>(<span class='st'>"phones"</span>, <span class='st'>"duplicate-is-after"</span>, <span class='st'>"after"</span>, <span class='no'>tg_out</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>f_duplicate_tier</span>(<span class='st'>"phones"</span>, <span class='st'>"duplicate-is-before"</span>, <span class='st'>"before"</span>, <span class='no'>tg_out</span>)
+<span class='no'>tg_data2</span> <span class='kw'>&lt;-</span> <span class='no'>tg</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>f_convert_tier_to_silences</span>(<span class='st'>"phones"</span>, <span class='st'>"^$|sil|sp"</span>, <span class='no'>tg_out</span>) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>readtextgrid</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/readtextgrid/man/read_textgrid.html'>read_textgrid</a></span>()
 
-<span class='co'># We duplicated "phones" four times and </span>
-<span class='co'># placed the copy into separate locations</span>
-<span class='no'>tg_out</span> <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>readtextgrid</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/readtextgrid/man/read_textgrid.html'>read_textgrid</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>magrittr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/magrittr/man/aliases.html'>extract</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tier_num"</span>, <span class='st'>"tier_name"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>()
-<span class='co'>#&gt; # A tibble: 7 x 2</span>
-<span class='co'>#&gt;   tier_num tier_name          </span>
-<span class='co'>#&gt;      &lt;dbl&gt; &lt;chr&gt;              </span>
-<span class='co'>#&gt; 1        1 duplicate-is-first </span>
-<span class='co'>#&gt; 2        2 words              </span>
-<span class='co'>#&gt; 3        3 duplicate-is-before</span>
-<span class='co'>#&gt; 4        4 phones             </span>
-<span class='co'>#&gt; 5        5 duplicate-is-after </span>
-<span class='co'>#&gt; 6        6 silence            </span>
-<span class='co'>#&gt; 7        7 duplicate-is-last</span></pre><p></div></p>
+<span class='no'>tg_data2</span>[<span class='no'>tg_data2</span>$<span class='no'>tier_num</span> <span class='kw'>==</span> <span class='fl'>2</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"tier_name"</span>, <span class='st'>"xmin"</span>, <span class='st'>"xmax"</span>, <span class='st'>"text"</span>)]
+<span class='co'>#&gt; # A tibble: 10 x 4</span>
+<span class='co'>#&gt;    tier_name  xmin  xmax text    </span>
+<span class='co'>#&gt;    &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   </span>
+<span class='co'>#&gt;  1 phones     0     0.25 silent  </span>
+<span class='co'>#&gt;  2 phones     0.25  0.35 sounding</span>
+<span class='co'>#&gt;  3 phones     0.35  0.49 sounding</span>
+<span class='co'>#&gt;  4 phones     0.49  0.52 sounding</span>
+<span class='co'>#&gt;  5 phones     0.52  0.55 silent  </span>
+<span class='co'>#&gt;  6 phones     0.55  0.59 sounding</span>
+<span class='co'>#&gt;  7 phones     0.59  1.04 sounding</span>
+<span class='co'>#&gt;  8 phones     1.04  1.16 sounding</span>
+<span class='co'>#&gt;  9 phones     1.16  1.39 silent  </span>
+<span class='co'>#&gt; 10 phones     1.39  1.41 silent</span></pre><p></div></p>
     <h2 class="hasAnchor" id="praat-source-code"><a class="anchor" href="#praat-source-code"></a>Praat source code</h2>
 
     
-<pre>form Duplicate a TextGrid tier
+<pre>form Convert annotations into "silence" and "sounding"
   sentence Textgrid_in
   sentence Target_tier phones
-  sentence Duplicate_name phones2
-  choice Duplicate_position: 1
-    button last
-    button first
-    button before
-    button after
+  sentence Silence_regex ^$|sil|sp
   sentence Textgrid_out
 endform
 
 Read from file: textgrid_in$
 
-# Find and duplicate tier
 @findNumberForTier: target_tier$
-tiers = Get number of tiers
-@setDuplicatePosition: duplicate_position$, findNumberForTier.result, tiers
 
-Duplicate tier:
-... findNumberForTier.result,
-... setDuplicatePosition.result,
-... duplicate_name$
+Replace interval texts:
+... findNumberForTier.result, 1, 0,
+... silence_regex$, "silent", "Regular Expressions"
+
+Replace interval texts:
+... findNumberForTier.result, 1, 0,
+... "^((?!silent).)*$", "sounding", "Regular Expressions"
 
 Save as text file: textgrid_out$
-
-
-procedure setDuplicatePosition: .position$, .current_num, .total_tiers
-    if .position$ = "last"
-        .result = .total_tiers + 1
-    endif
-
-    if .position$ = "first"
-        .result = 1
-    endif
-
-    if .position$ = "before"
-        .result = .current_num
-    endif
-
-    if .position$ = "after"
-        .result = .current_num + 1
-    endif
-endproc
 
 # Find the number of the (last) tier with a given name
 procedure findNumberForTier: .target_tier$

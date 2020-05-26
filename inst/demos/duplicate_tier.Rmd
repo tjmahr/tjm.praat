@@ -12,13 +12,13 @@ tg <- system.file(
   package = "tjm.praat"
 )
 
+tg_out <- tempfile("test", fileext = ".TextGrid")
+
+# Note that there are three tiers
 tg %>% 
   readtextgrid::read_textgrid() %>% 
   magrittr::extract(c("tier_num", "tier_name")) %>% 
   unique()
-
-# Set path
-tg_out <- tempfile("test", fileext = ".TextGrid")
 
 f_duplicate_tier <- wrap_praat_script(
   praat_location = praat_path,
@@ -26,12 +26,14 @@ f_duplicate_tier <- wrap_praat_script(
   return = "last-argument"
 )
 
-tg %>% 
+tg_out <- tg %>% 
   f_duplicate_tier("phones", "duplicate-is-first", "first", tg_out) %>% 
   f_duplicate_tier("phones", "duplicate-is-last", "last", tg_out) %>% 
   f_duplicate_tier("phones", "duplicate-is-after", "after", tg_out) %>% 
   f_duplicate_tier("phones", "duplicate-is-before", "before", tg_out)
 
+# We duplicated "phones" four times and 
+# placed the copy into separate locations
 tg_out %>% 
   readtextgrid::read_textgrid() %>% 
   magrittr::extract(c("tier_num", "tier_name")) %>% 

@@ -1,4 +1,4 @@
-form Make silence text grid
+form Make silence textgrid
     sentence Wav_file_in
     sentence Textgrid_out
 endform

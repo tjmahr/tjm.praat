@@ -3,7 +3,7 @@
 \docType{data}
 \name{duplicate_tier}
 \alias{duplicate_tier}
-\title{Duplicate a textgrid}
+\title{Duplicate a textgrid tier}
 \format{
 A Praat script
 \describe{
@@ -33,6 +33,9 @@ tg <- system.file(
   package = "tjm.praat"
 )
 
+tg_out <- tempfile("test", fileext = ".TextGrid")
+
+# Note that there are three tiers
 tg \%>\% 
   readtextgrid::read_textgrid() \%>\% 
   magrittr::extract(c("tier_num", "tier_name")) \%>\% 
@@ -44,22 +47,20 @@ tg \%>\%
 #> 2        2 phones   
 #> 3        3 silence
 
-# Set path
-tg_out <- tempfile("test", fileext = ".TextGrid")
-
 f_duplicate_tier <- wrap_praat_script(
   praat_location = praat_path,
   script_code_to_run = duplicate_tier,
   return = "last-argument"
 )
 
-tg \%>\% 
+tg_out <- tg \%>\% 
   f_duplicate_tier("phones", "duplicate-is-first", "first", tg_out) \%>\% 
   f_duplicate_tier("phones", "duplicate-is-last", "last", tg_out) \%>\% 
   f_duplicate_tier("phones", "duplicate-is-after", "after", tg_out) \%>\% 
   f_duplicate_tier("phones", "duplicate-is-before", "before", tg_out)
-#> [1] "C:\\Users\\Tristan\\AppData\\Local\\Temp\\RtmpYbG0ee\\test34107c7a2b.TextGrid"
 
+# We duplicated "phones" four times and 
+# placed the copy into separate locations
 tg_out \%>\% 
   readtextgrid::read_textgrid() \%>\% 
   magrittr::extract(c("tier_num", "tier_name")) \%>\% 
@@ -97,7 +98,10 @@ Read from file: textgrid_in$
 tiers = Get number of tiers
 @setDuplicatePosition: duplicate_position$, findNumberForTier.result, tiers
 
-Duplicate tier: findNumberForTier.result, setDuplicatePosition.result, duplicate_name$
+Duplicate tier:
+... findNumberForTier.result,
+... setDuplicatePosition.result,
+... duplicate_name$
 
 Save as text file: textgrid_out$
 

@@ -1,0 +1,23 @@
+form Convert annotations into "silence" and "sounding"
+  sentence Textgrid_in
+  sentence Target_tier phones
+  sentence Silence_regex ^$|sil|sp
+  sentence Textgrid_out
+endform
+
+Read from file: textgrid_in$
+
+@findNumberForTier: target_tier$
+
+Replace interval texts:
+... findNumberForTier.result, 1, 0,
+... silence_regex$, "silent", "Regular Expressions"
+
+Replace interval texts:
+... findNumberForTier.result, 1, 0,
+... "^((?!silent).)*$", "sounding", "Regular Expressions"
+
+Save as text file: textgrid_out$
+
+{findNumberForTier}
+
