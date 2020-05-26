@@ -48,12 +48,6 @@ set_textgrid_ext <- function(xs) {
 #' }
 #'
 #' @includeRmd inst/demos/create_silences_textgrid.Rmd
-#'
-#' @section Source code:
-#'
-#'#' ```{r, echo = FALSE, comment = ""}
-#' create_silences_textgrid
-#' ```
 "create_silences_textgrid"
 
 
@@ -69,10 +63,4 @@ set_textgrid_ext <- function(xs) {
 #' }
 #'
 #' @includeRmd inst/demos/merge_duplicate_intervals.Rmd
-#'
-#' @section Source code:
-#'
-#' ```{r, echo = FALSE, comment = ""}
-#' merge_duplicate_intervals
-#' ```
 "merge_duplicate_intervals"

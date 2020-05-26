@@ -27,7 +27,7 @@ praat_path <- Sys.which("praat")
 
 # Locate some wav files
 
-dir <- system.file("demo-textgrids/", package = "tjm.praat")
+dir <- system.file("test-wavs-a/", package = "tjm.praat")
 wavs <- list.files(dir, pattern = ".wav", full.names = TRUE)
 
 # Put the resulting textgrids into a temporary folder
@@ -42,15 +42,28 @@ f_create_silences_textgrid <- wrap_praat_script(
 # Apply the function to each wav file and read into R
 map2_chr(wavs, tgs, f_create_silences_textgrid) \%>\%
   map_df(read_textgrid)
-#> # A tibble: 0 x 0
+#> # A tibble: 6 x 10
+#>   file  tier_num tier_name tier_type tier_xmin tier_xmax  xmin  xmax text 
+#>   <chr>    <dbl> <chr>     <chr>         <dbl>     <dbl> <dbl> <dbl> <chr>
+#> 1 the_~        1 silences  Interval~         0       0.6 0     0.464 soun~
+#> 2 the_~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
+#> 3 the_~        1 silences  Interval~         0       0.6 0     0.464 soun~
+#> 4 the_~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
+#> 5 the_~        1 silences  Interval~         0       0.6 0     0.464 soun~
+#> 6 the_~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
+#> # ... with 1 more variable: annotation_num <int>
 }\if{html}{\out{</div>}}
 }
 
-\section{Source code}{
-
-
-#' ```{r, echo = FALSE, comment = ""}
-create_silences_textgrid\preformatted{}
+\section{Praat source code}{
+\preformatted{  form Make silence text grid
+      sentence Wav_file_in
+      sentence TextGrid_out
+  endform
+  Read from file: wav_file_in$
+  To TextGrid (silences): 100, 0, -25, 0.1, 0.1, "silent", "sounding"
+  Save as text file: textGrid_out$
+}
 }
 
 \keyword{datasets}

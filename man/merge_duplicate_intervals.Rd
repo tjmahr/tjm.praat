@@ -74,7 +74,7 @@ tg_data2[tg_data2$tier_num == 3, c("tier_name", "xmin", "xmax", "text")]
 }\if{html}{\out{</div>}}
 }
 
-\section{Source code}{
+\section{Praat source code}{
 \preformatted{form Merge duplicated interval labels
   sentence TextGrid_in
   sentence Target_tier silence
@@ -87,7 +87,7 @@ Read from file: textGrid_in$
 @labelMerger: "initialize", findNumberForTier.result
 
 while labelMerger.has_next
-	@labelMerger: "merge-or-step", findNumberForTier.result
+    @labelMerger: "merge-or-step", findNumberForTier.result
 endwhile
 
 Save as text file: textGrid_out$

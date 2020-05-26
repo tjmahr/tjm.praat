@@ -10,7 +10,7 @@ praat_path <- Sys.which("praat")
 
 # Locate some wav files
 
-dir <- system.file("demo-textgrids/", package = "tjm.praat")
+dir <- system.file("test-wavs-a/", package = "tjm.praat")
 wavs <- list.files(dir, pattern = ".wav", full.names = TRUE)
 
 # Put the resulting textgrids into a temporary folder
@@ -27,4 +27,9 @@ map2_chr(wavs, tgs, f_create_silences_textgrid) %>%
   map_df(read_textgrid)
 ```
 
+# Praat source code
+
+```{r, echo = FALSE, comment = ""}
+create_silences_textgrid
+```
 

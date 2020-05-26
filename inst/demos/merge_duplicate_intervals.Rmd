@@ -28,5 +28,11 @@ tg_data2 <- f_merge_duplicate_intervals(tg, "silence", tg_out) %>%
   readtextgrid::read_textgrid()
 
 tg_data2[tg_data2$tier_num == 3, c("tier_name", "xmin", "xmax", "text")]
-
 ```
+
+# Praat source code
+
+```{r, echo = FALSE, comment = ""}
+merge_duplicate_intervals
+```
+
