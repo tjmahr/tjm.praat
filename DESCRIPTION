@@ -1,12 +1,18 @@
 Package: tjm.praat
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Miscellaneous 'Praat' Scripts
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: c(
+    person(
+      given = "Tristan",
+      family = "Mahr",
+      role = c("aut", "cre"),
+      email = "tristan.mahr@wisc.edu",
+      comment = c(ORCID = "0000-0002-8890-5116")
+    )
+  )
+Description: A collection of 'Praat' scripts designed to be called from 'R'.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
