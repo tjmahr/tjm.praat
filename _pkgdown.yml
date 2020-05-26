@@ -5,4 +5,5 @@ reference:
 - title: "Included Praat scripts"
 - contents:
   - create_silences_textgrid
+  - duplicate_tier
   - merge_duplicate_intervals

@@ -44,7 +44,7 @@ set_textgrid_ext <- function(xs) {
 #' @format A Praat script
 #' \describe{
 #'   \item{wav_file_in}{path for the wave to read}
-#'   \item{textGrid_out}{path of the textgrid file to create}
+#'   \item{textgrid_out}{path of the textgrid file to create}
 #' }
 #'
 #' @includeRmd inst/demos/create_silences_textgrid.Rmd
@@ -57,10 +57,28 @@ set_textgrid_ext <- function(xs) {
 #'
 #' @format A Praat script
 #' \describe{
-#'   \item{textGrid_in}{path of the textgrid file to read in}
+#'   \item{textgrid_in}{path of the textgrid file to read in}
 #'   \item{target_tier}{tier to update}
-#'   \item{textGrid_out}{path of the textgrid file to create}
+#'   \item{textgrid_out}{path of the textgrid file to create}
 #' }
 #'
 #' @includeRmd inst/demos/merge_duplicate_intervals.Rmd
 "merge_duplicate_intervals"
+
+
+#' Duplicate a textgrid tier
+#'
+#' Duplicate (and rename) a textgrid tier.
+#'
+#' @format A Praat script
+#' \describe{
+#'   \item{textgrid_in}{path of the textgrid file to read in}
+#'   \item{target_tier}{tier to copy}
+#'   \item{duplicate_name}{name to use for the duplicated tier}
+#'   \item{duplicate_position}{where to place the new tier: `last` (default),
+#'   `first`, `before` or `after` the original.}
+#'   \item{textgrid_out}{path of the textgrid file to create}
+#' }
+#'
+#' @includeRmd inst/demos/duplicate_tier.Rmd
+"duplicate_tier"

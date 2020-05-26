@@ -1,10 +1,10 @@
 form Merge duplicated interval labels
-  sentence TextGrid_in
+  sentence Textgrid_in
   sentence Target_tier silence
-  sentence TextGrid_out
+  sentence Textgrid_out
 endform
 
-Read from file: textGrid_in$
+Read from file: textgrid_in$
 @findNumberForTier: target_tier$
 
 @labelMerger: "initialize", findNumberForTier.result
@@ -13,7 +13,7 @@ while labelMerger.has_next
 	@labelMerger: "merge-or-step", findNumberForTier.result
 endwhile
 
-Save as text file: textGrid_out$
+Save as text file: textgrid_out$
 
 
 # Object for merging duplicated textgrid interval labels

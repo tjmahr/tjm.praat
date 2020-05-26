@@ -124,7 +124,7 @@
 
     <p>A Praat script</p><dl>
 <dt>wav_file_in</dt><dd><p>path for the wave to read</p></dd>
-<dt>textGrid_out</dt><dd><p>path of the textgrid file to create</p></dd>
+<dt>textgrid_out</dt><dd><p>path of the textgrid file to create</p></dd>
 
 </dl>
 
@@ -167,13 +167,13 @@
     <h2 class="hasAnchor" id="praat-source-code"><a class="anchor" href="#praat-source-code"></a>Praat source code</h2>
 
     
-<pre>  form Make silence text grid
-      sentence Wav_file_in
-      sentence TextGrid_out
-  endform
-  Read from file: wav_file_in$
-  To TextGrid (silences): 100, 0, -25, 0.1, 0.1, "silent", "sounding"
-  Save as text file: textGrid_out$
+<pre>form Make silence text grid
+    sentence Wav_file_in
+    sentence Textgrid_out
+endform
+Read from file: wav_file_in$
+To TextGrid (silences): 100, 0, -25, 0.1, 0.1, "silent", "sounding"
+Save as text file: textgrid_out$
 </pre>
 
 

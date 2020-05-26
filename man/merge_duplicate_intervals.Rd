@@ -7,9 +7,9 @@
 \format{
 A Praat script
 \describe{
-\item{textGrid_in}{path of the textgrid file to read in}
+\item{textgrid_in}{path of the textgrid file to read in}
 \item{target_tier}{tier to update}
-\item{textGrid_out}{path of the textgrid file to create}
+\item{textgrid_out}{path of the textgrid file to create}
 }
 }
 \usage{
@@ -19,7 +19,8 @@ merge_duplicate_intervals
 If successive intervals have the same label, they are merged together.
 }
 \section{Example usage}{
-\if{html}{\out{<div class="r">}}\preformatted{library(magrittr)
+\if{html}{\out{<div class="r">}}\preformatted{library(tjm.praat)
+library(magrittr)
 #> 
 #> Attaching package: 'magrittr'
 #> The following object is masked from 'package:purrr':
@@ -76,12 +77,12 @@ tg_data2[tg_data2$tier_num == 3, c("tier_name", "xmin", "xmax", "text")]
 
 \section{Praat source code}{
 \preformatted{form Merge duplicated interval labels
-  sentence TextGrid_in
+  sentence Textgrid_in
   sentence Target_tier silence
-  sentence TextGrid_out
+  sentence Textgrid_out
 endform
 
-Read from file: textGrid_in$
+Read from file: textgrid_in$
 @findNumberForTier: target_tier$
 
 @labelMerger: "initialize", findNumberForTier.result
@@ -90,7 +91,7 @@ while labelMerger.has_next
     @labelMerger: "merge-or-step", findNumberForTier.result
 endwhile
 
-Save as text file: textGrid_out$
+Save as text file: textgrid_out$
 
 
 # Object for merging duplicated textgrid interval labels

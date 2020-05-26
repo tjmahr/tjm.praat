@@ -1,6 +1,7 @@
 # Example usage
 
 ```{r, eval = TRUE, comment = "#>", collapse = TRUE}
+library(tjm.praat)
 library(magrittr)
 
 # Use the PATH to find praat

@@ -29,10 +29,15 @@ create_silences_textgrid <- snips_list$`create-silences-textgrid` %T>%
 
 # Fill in placeholder code in the snips
 merge_duplicate_intervals <- snips_list$`merge-duplicate-intervals` %>%
-  glue::glue_data(snips_list, . ) %T>%
+  glue::glue_data(snips_list, .) %T>%
   writeLines("data-raw/merge-duplicate-intervals.praat")
+
+duplicate_tier <- snips_list$`duplicate-tier` %>%
+  glue::glue_data(snips_list, .) %T>%
+  writeLines("data-raw/duplicate-tier.praat")
 
 
 
 usethis::use_data(create_silences_textgrid, overwrite = TRUE)
 usethis::use_data(merge_duplicate_intervals, overwrite = TRUE)
+usethis::use_data(duplicate_tier, overwrite = TRUE)

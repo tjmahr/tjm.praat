@@ -8,7 +8,7 @@
 A Praat script
 \describe{
 \item{wav_file_in}{path for the wave to read}
-\item{textGrid_out}{path of the textgrid file to create}
+\item{textgrid_out}{path of the textgrid file to create}
 }
 }
 \usage{
@@ -58,11 +58,11 @@ map2_chr(wavs, tgs, f_create_silences_textgrid) \%>\%
 \section{Praat source code}{
 \preformatted{form Make silence text grid
     sentence Wav_file_in
-    sentence TextGrid_out
+    sentence Textgrid_out
 endform
 Read from file: wav_file_in$
 To TextGrid (silences): 100, 0, -25, 0.1, 0.1, "silent", "sounding"
-Save as text file: textGrid_out$
+Save as text file: textgrid_out$
 }
 }
 

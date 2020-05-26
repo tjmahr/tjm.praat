@@ -1,0 +1,46 @@
+# Example usage
+
+```{r, eval = TRUE, comment = "#>", collapse = TRUE}
+library(tjm.praat)
+library(magrittr, warn.conflicts = FALSE)
+
+# Use the PATH to find praat
+praat_path <- Sys.which("praat")
+
+tg <- system.file(
+  "demo-textgrids/merge-duplicate-intervals.TextGrid",
+  package = "tjm.praat"
+)
+
+tg %>% 
+  readtextgrid::read_textgrid() %>% 
+  magrittr::extract(c("tier_num", "tier_name")) %>% 
+  unique()
+
+# Set path
+tg_out <- tempfile("test", fileext = ".TextGrid")
+
+f_duplicate_tier <- wrap_praat_script(
+  praat_location = praat_path,
+  script_code_to_run = duplicate_tier,
+  return = "last-argument"
+)
+
+tg %>% 
+  f_duplicate_tier("phones", "duplicate-is-first", "first", tg_out) %>% 
+  f_duplicate_tier("phones", "duplicate-is-last", "last", tg_out) %>% 
+  f_duplicate_tier("phones", "duplicate-is-after", "after", tg_out) %>% 
+  f_duplicate_tier("phones", "duplicate-is-before", "before", tg_out)
+
+tg_out %>% 
+  readtextgrid::read_textgrid() %>% 
+  magrittr::extract(c("tier_num", "tier_name")) %>% 
+  unique()
+```
+
+# Praat source code
+
+```{r, echo = FALSE, comment = ""}
+duplicate_tier
+```
+
