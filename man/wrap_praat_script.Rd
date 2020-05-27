@@ -10,6 +10,22 @@ wrap_praat_script(
   return = c("last-argument", "info-window")
 )
 }
+\arguments{
+\item{praat_location}{path to the Praat executable}
+
+\item{script_code_to_run}{Praat script to run}
+
+\item{return}{value to return. \code{"last-argument"} returns the last argument to
+the Praat script. \code{"info-window"} returns the contents of the Praat Info
+Window.}
+}
+\value{
+see \code{return} argument
+}
 \description{
 Make a function that runs a Praat script
+}
+\details{
+This function basically sets up a call to Praat's command-line
+interface using \code{system2()}.
 }

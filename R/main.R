@@ -1,6 +1,18 @@
 
 #' Make a function that runs a Praat script
+#'
+#' @param praat_location path to the Praat executable
+#' @param script_code_to_run Praat script to run
+#' @param return value to return. `"last-argument"` returns the last argument to
+#'   the Praat script. `"info-window"` returns the contents of the Praat Info
+#'   Window.
+#' @return see `return` argument
 #' @export
+#'
+#' @details This function basically sets up a call to Praat's command-line
+#'   interface using `system2()`.
+#'
+#'
 wrap_praat_script <- function(
   praat_location,
   script_code_to_run,
@@ -17,7 +29,7 @@ wrap_praat_script <- function(
       # Return what would be printed to InfoWindow
       results <- system2(
         praat_location,
-        c("--ansi", "--run", script_file_to_run, ...),
+        c("--utf8", "--run", script_file_to_run, ...),
         stdout = TRUE
       )
       return(results)
@@ -26,14 +38,31 @@ wrap_praat_script <- function(
       # pipe into other functions
       results <- system2(
         praat_location,
-        c("--ansi", "--run", script_file_to_run, ...)
+        c("--utf8", "--run", script_file_to_run, ...)
       )
       return(...elt(...length()))
     }
   }
 }
 
+#' Extract the form from a Praat script
+#' @param x a single string (a Praat script)
+#' @return the lines of text from `form` to `endform`
 #' @export
+#' @examples
+#' get_praat_form(duplicate_tier)
+get_praat_form <- function(x) {
+  start <- regexpr("form.*endform", x)
+  end <- attr(regexpr("form.*endform", x), "match.length")
+  substring(x, start, end)
+}
+
+#' Set the file-extension in a path to `.TextGrid`
+#' @param xs paths or filenames
+#' @return the paths with their extensions replaced with `.TextGrid`
+#' @export
+#' @examples
+#' set_textgrid_ext("C:/Programs/Nullsoft/Winamp/Demo.mp3")
 set_textgrid_ext <- function(xs) {
   paste0(tools::file_path_sans_ext(xs), ".TextGrid")
 }
