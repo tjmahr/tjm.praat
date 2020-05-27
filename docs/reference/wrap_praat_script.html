@@ -123,7 +123,32 @@
   <span class='kw'>return</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"last-argument"</span>, <span class='st'>"info-window"</span>)
 )</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>praat_location</th>
+      <td><p>path to the Praat executable</p></td>
+    </tr>
+    <tr>
+      <th>script_code_to_run</th>
+      <td><p>Praat script to run</p></td>
+    </tr>
+    <tr>
+      <th>return</th>
+      <td><p>value to return. <code>"last-argument"</code> returns the last argument to
+the Praat script. <code>"info-window"</code> returns the contents of the Praat Info
+Window.</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>see <code>return</code> argument</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function basically sets up a call to Praat's command-line
+interface using <code><a href='https://rdrr.io/r/base/system2.html'>system2()</a></code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

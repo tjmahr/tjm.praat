@@ -8,3 +8,7 @@ reference:
   - convert_tier_to_silences
   - duplicate_tier
   - merge_duplicate_intervals
+- title: "Etc."
+- contents:
+  - get_praat_form
+  - set_textgrid_ext

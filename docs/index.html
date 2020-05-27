@@ -66,7 +66,102 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-A collection of 'Praat' scripts designed to be called from 'R'.
+<div id="tjmpraat" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#tjmpraat" class="anchor"></a>tjm.praat</h1></div>
+<!-- badges: start -->
+<!-- badges: end -->
+<p>The goal of tjm.praat is to make it easier to run <a href="http://www.fon.hum.uva.nl/praat/">Praat</a> scripts as part of an R workflow. This package provides one main function <code><a href="reference/wrap_praat_script.html">wrap_praat_script()</a></code>, plus some scripts designed to work with this function. The name <code>tjm.praat</code> indicates that the package houses my (tjm’s) <code>.praat</code> files.</p>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
+<p>You can install tjm.praat from <a href="https://github.com/">GitHub</a> with:</p>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install.packages("devtools")</span>
+<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"tjmahr/tjm.praat"</span>)</pre></div>
+</div>
+<div id="example-of-wrapping-a-praat-script-as-a-function" class="section level2">
+<h2 class="hasAnchor">
+<a href="#example-of-wrapping-a-praat-script-as-a-function" class="anchor"></a>Example of wrapping a Praat script as a function</h2>
+<p>Let’s make a function that draws a Praat textgrid and saves the image as <code>.png</code> file. First, let’s make the minimal working Praat script, and store it as a string in R. We use <code><a href="https://glue.tidyverse.org/reference/glue.html">glue::glue()</a></code> because it cleans up the leading and trailing blank lines and the indentations on the string.</p>
+<div class="sourceCode" id="cb2"><pre class="r"><span class="no">script</span> <span class="kw">&lt;-</span> <span class="kw pkg">glue</span><span class="kw ns">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html">glue</a></span>(
+  <span class="st">'
+  form Draw a textgrid
+    sentence Textgrid_in
+    integer Width 6
+    integer Height 4
+    sentence Png_out
+  endform
+
+  Read from file: textgrid_in$
+  Select outer viewport: 0, width, 0, height
+  
+  Draw: 0, 0, "yes", "yes", "yes"
+  Save as 300-dpi PNG file: png_out$
+  '</span>
+)</pre></div>
+<p>Now, we can convert this script into an R function. We tell <code><a href="reference/wrap_praat_script.html">wrap_praat_script()</a></code> to return the last argument of the script (<code>png_out$</code> in this example) back to R after the script runs.</p>
+<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tjm.praat</span>)
+
+<span class="co"># Find where Praat lives on my machine</span>
+<span class="no">praat_location</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.which.html">Sys.which</a></span>(<span class="st">"praat"</span>)
+
+<span class="no">f_draw_textgrid</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span>(
+  <span class="kw">praat_location</span> <span class="kw">=</span> <span class="no">praat_location</span>,
+  <span class="kw">script_code_to_run</span> <span class="kw">=</span> <span class="no">script</span>,
+  <span class="kw">return</span> <span class="kw">=</span> <span class="st">"last-argument"</span>
+)</pre></div>
+<p>Now we set up the file arguments to script. First, we need a textgrid file. Let’s use a textgrid bundled with the package. The textgrid shows the results of a forced-alignment on the phrase “bird house”.</p>
+<div class="sourceCode" id="cb4"><pre class="r"><span class="no">tg_in</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(
+  <span class="st">"demo-textgrids/birdhouse.TextGrid"</span>,
+  <span class="kw">package</span> <span class="kw">=</span> <span class="st">"tjm.praat"</span>
+)</pre></div>
+<p>We also need a place to save the image. I’m going to use a temporary file.</p>
+<div class="sourceCode" id="cb5"><pre class="r"><span class="no">png_out</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(<span class="st">"birdhouse"</span>, <span class="kw">fileext</span> <span class="kw">=</span> <span class="st">".png"</span>)</pre></div>
+<p>Shoot. I just forgot what the arguments are to this script. That’s okay, we can use a helper function to view the form.</p>
+<div class="sourceCode" id="cb6"><pre class="r"><span class="fu"><a href="reference/get_praat_form.html">get_praat_form</a></span>(<span class="no">script</span>)
+<span class="co">#&gt; form Draw a textgrid</span>
+<span class="co">#&gt;   sentence Textgrid_in</span>
+<span class="co">#&gt;   integer Width 6</span>
+<span class="co">#&gt;   integer Height 4</span>
+<span class="co">#&gt;   sentence Png_out</span>
+<span class="co">#&gt; endform</span></pre></div>
+<p>Oh that’s right. <em>Width</em> then <em>height</em>. Now, let’s call the function and view the resulting image.</p>
+<div class="sourceCode" id="cb7"><pre class="r"><span class="no">result</span> <span class="kw">&lt;-</span> <span class="fu">f_draw_textgrid</span>(<span class="no">tg_in</span>, <span class="fl">7</span>, <span class="fl">2</span>, <span class="no">png_out</span>)
+<span class="kw pkg">magick</span><span class="kw ns">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html">image_read</a></span>(<span class="no">result</span>)</pre></div>
+<p><img src="reference/figures/README-png-demo-1.png" width="100%"></p>
+</div>
+<div id="example-using-bundled-praat-scripts" class="section level2">
+<h2 class="hasAnchor">
+<a href="#example-using-bundled-praat-scripts" class="anchor"></a>Example using bundled Praat scripts</h2>
+<p>I have bundled some Praat scripts with this package. They are very minimal and written under the assumption that the scripts would only ever called via a Praat script.</p>
+<p>In one of my projects, I needed to extract the silences identified by a forced alignment algorithm. Thus, I needed to do three things for each textgrid:</p>
+<ol>
+<li>Copy the tier with speech-sound intervals.</li>
+<li>Convert the speech-sound labels into “silence” and “sounding”.</li>
+<li>Merged adjacent “silence” intervals and “sounding” intervals together.</li>
+</ol>
+<p>So I wrote a script for each of these steps. The last-argument of each script is a Praat textgrid, so I can pipe these wrapped-script functions into each other.</p>
+<div class="sourceCode" id="cb8"><pre class="r"><span class="no">f_duplicate</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span>(<span class="no">praat_location</span>, <span class="no">duplicate_tier</span>)
+<span class="no">f_relabel</span>   <span class="kw">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span>(<span class="no">praat_location</span>, <span class="no">convert_tier_to_silences</span>)
+<span class="no">f_merge</span>     <span class="kw">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span>(<span class="no">praat_location</span>, <span class="no">merge_duplicate_intervals</span>)</pre></div>
+<p>Let’s apply these scripts to our original example textgrid.</p>
+<div class="sourceCode" id="cb9"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">magrittr</span>, <span class="kw">warn.conflicts</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+
+<span class="no">tg_out</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(<span class="st">"demo"</span>, <span class="kw">fileext</span> <span class="kw">=</span> <span class="st">".TextGrid"</span>)
+<span class="no">png_out</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(<span class="st">"demo"</span>, <span class="kw">fileext</span> <span class="kw">=</span> <span class="st">".png"</span>)
+
+<span class="no">tg_result</span> <span class="kw">&lt;-</span> <span class="no">tg_in</span> <span class="kw">%&gt;%</span>
+  <span class="fu">f_duplicate</span>(<span class="st">"phones"</span>, <span class="st">"pauses"</span>, <span class="st">"last"</span>, <span class="no">tg_out</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">f_relabel</span>(<span class="st">"pauses"</span>, <span class="st">"^$|sil|sp"</span>, <span class="no">tg_out</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">f_merge</span>(<span class="st">"pauses"</span>, <span class="no">tg_out</span>)
+
+<span class="no">png_result</span> <span class="kw">&lt;-</span> <span class="fu">f_draw_textgrid</span>(<span class="no">tg_result</span>, <span class="fl">7</span>, <span class="fl">2</span>, <span class="no">png_out</span>)
+
+<span class="kw pkg">magick</span><span class="kw ns">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html">image_read</a></span>(<span class="no">png_result</span>)</pre></div>
+<p><img src="reference/figures/README-png-demo-2-1.png" width="100%"></p>
+<p>Now, with a little <a href="https://purrr.tidyverse.org/">purrr</a> magic, we could run this workflow on thousands of textgrids 😉.</p>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • tjm.praat</title>
+<title>Extract the form from a Praat script — get_praat_form • tjm.praat</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Extract the form from a Praat script — get_praat_form" />
+<meta property="og:description" content="Extract the form from a Praat script" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -105,104 +106,45 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Extract the form from a Praat script</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tjmahr/tjm.praat/blob/master/R/main.R'><code>R/main.R</code></a></small>
+    <div class="hidden name"><code>get_praat_form.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Extract the form from a Praat script</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>get_praat_form</span>(<span class='no'>x</span>)</pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-r-functions-for-using-praat-scripts" class="hasAnchor"><a href="#section-r-functions-for-using-praat-scripts" class="anchor"></a>R functions for using Praat scripts</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="wrap_praat_script.html">wrap_praat_script()</a></code> </p>
-        </td>
-        <td><p>Make a function that runs a Praat script</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-included-praat-scripts" class="hasAnchor"><a href="#section-included-praat-scripts" class="anchor"></a>Included Praat scripts</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="create_silences_textgrid.html">create_silences_textgrid</a></code> </p>
-        </td>
-        <td><p>Create a silences textgrid</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="convert_tier_to_silences.html">convert_tier_to_silences</a></code> </p>
-        </td>
-        <td><p>Convert a textgrid tier into a "silences" tier</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="duplicate_tier.html">duplicate_tier</a></code> </p>
-        </td>
-        <td><p>Duplicate a textgrid tier</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="merge_duplicate_intervals.html">merge_duplicate_intervals</a></code> </p>
-        </td>
-        <td><p>Merge duplicated interval labels</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-etc-" class="hasAnchor"><a href="#section-etc-" class="anchor"></a>Etc.</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="get_praat_form.html">get_praat_form()</a></code> </p>
-        </td>
-        <td><p>Extract the form from a Praat script</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_textgrid_ext.html">set_textgrid_ext()</a></code> </p>
-        </td>
-        <td><p>Set the file-extension in a path to <code>.TextGrid</code></p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>a single string (a Praat script)</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>the lines of text from <code>form</code> to <code>endform</code></p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>get_praat_form</span>(<span class='no'>duplicate_tier</span>)</div><div class='output co'>#&gt; form Duplicate a TextGrid tier
+#&gt;   sentence Textgrid_in
+#&gt;   sentence Target_tier phones
+#&gt;   sentence Duplicate_name phones2
+#&gt;   choice Duplicate_position: 1
+#&gt;     button last
+#&gt;     button first
+#&gt;     button before
+#&gt;     button after
+#&gt;   sentence Textgrid_out
+#&gt; endform</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

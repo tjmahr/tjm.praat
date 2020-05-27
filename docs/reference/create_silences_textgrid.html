@@ -143,7 +143,7 @@
 <span class='no'>wavs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='no'>dir</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>".wav"</span>, <span class='kw'>full.names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># Put the resulting textgrids into a temporary folder</span>
-<span class='no'>tgs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='fu'>set_textgrid_ext</span>(<span class='no'>wavs</span>)))
+<span class='no'>tgs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='fu'><a href='set_textgrid_ext.html'>set_textgrid_ext</a></span>(<span class='no'>wavs</span>)))
 
 <span class='no'>f_create_silences_textgrid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='wrap_praat_script.html'>wrap_praat_script</a></span>(
   <span class='kw'>praat_location</span> <span class='kw'>=</span> <span class='no'>praat_path</span>,
