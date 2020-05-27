@@ -24,8 +24,8 @@ procedure labelMerger: .method$, .tier_number
   endif
 
   if .method$ = "merge-or-step"
-    can_merge = .current_label$ == .next_label$
-    if can_merge == 1
+    .can_merge = .current_label$ == .next_label$
+    if .can_merge == 1
       Remove right boundary: .tier_number, .current_position
       Set interval text: .tier_number, .current_position, .current_label$
     else
@@ -55,10 +55,10 @@ procedure findNumberForTier: .target_tier$
   .tiers = Get number of tiers
   .result = 0
 
-  for tier_i to .tiers
-    tier_i_name$ = Get tier name: tier_i
-      if tier_i_name$ == .target_tier$
-        .result = tier_i
+  for .tier_i to .tiers
+    .tier_i_name$ = Get tier name: .tier_i
+      if .tier_i_name$ == .target_tier$
+        .result = .tier_i
       endif
   endfor
 

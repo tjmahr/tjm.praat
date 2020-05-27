@@ -24,8 +24,8 @@ procedure labelMerger: .method$, .tier_number
   endif
 
   if .method$ = "merge-or-step"
-    can_merge = .current_label$ == .next_label$
-    if can_merge == 1
+    .can_merge = .current_label$ == .next_label$
+    if .can_merge == 1
       Remove right boundary: .tier_number, .current_position
       Set interval text: .tier_number, .current_position, .current_label$
     else
