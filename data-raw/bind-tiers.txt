@@ -1,0 +1,13 @@
+form Copy tiers from one textgrid (sender) onto another (reciever)
+  sentence Textgrid_receiver
+  sentence Textgrid_sender
+  sentence Tiers_to_pull
+  sentence Textgrid_out
+endform
+
+
+textgrid_receiver$ = "C:/Users/trist/Documents/R/win-library/3.6/tjm.praat/demo-textgrids/birdhouse.TextGrid"
+textgrid_sender$ = "C:/Users/trist/Documents/R/win-library/3.6/tjm.praat/demo-textgrids/birdhouse2.TextGrid"
+
+Read from file: Textgrid_receiver$
+tiers_to_pull$ = "p2fa-words,p2fa-phones"

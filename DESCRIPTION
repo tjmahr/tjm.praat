@@ -22,4 +22,10 @@ Depends:
 URL: https://github.com/tjmahr/tjm.praat
 BugReports: https://github.com/tjmahr/tjm.praat/issues
 Imports: 
-    tools
+    tools,
+    glue
+Suggests: 
+    readtextgrid,
+    magick,
+    purrr
+SystemRequirements: praat
