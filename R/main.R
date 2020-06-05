@@ -132,3 +132,21 @@ set_textgrid_ext <- function(xs) {
 #' @includeRmd inst/demos/convert_tier_to_silences.Rmd
 "convert_tier_to_silences"
 
+
+#' Bind (copy) tiers from one textgrid onto another textgrid
+#'
+#' The name is meant to evoke `dplyr::bind_rows()` which "stacks" one dataframe
+#' on top of another. Here we pull selected tiers from one textgrid and bind
+#' them onto another other one.
+#'
+#' @format A Praat script
+#' \describe{
+#'   \item{textgrid_receiver}{path of the textgrid file to update (attach tiers onto)}
+#'   \item{textgrid_sender}{path of the textgrid file to extract tiers from}
+#'   \item{tiers_to_pull}{comma-separated names of tiers to extract}
+#'   \item{textgrid_out}{path of the textgrid file to create}
+#' }
+#'
+#' @includeRmd inst/demos/bind_tiers.Rmd
+"bind_tiers"
+

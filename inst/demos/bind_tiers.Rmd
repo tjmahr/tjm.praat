@@ -1,0 +1,46 @@
+# Example usage
+
+```{r, eval = TRUE, comment = "#>", collapse = TRUE}
+library(tjm.praat)
+library(magrittr)
+
+# Use the PATH to find praat
+praat_path <- Sys.which("praat")
+
+# The two textgrids we want to bind together
+tg <- system.file(
+  "demo-textgrids/birdhouse.TextGrid",
+  package = "tjm.praat"
+)
+tg_data <- readtextgrid::read_textgrid(tg)
+
+tg2 <- system.file(
+  "demo-textgrids/birdhouse2.TextGrid",
+  package = "tjm.praat"
+)
+tg2_data <- readtextgrid::read_textgrid(tg2)
+
+
+tg_out <- tempfile("test", fileext = ".TextGrid")
+
+# We want to put "p2fa-words" and "p2fa-phones" on to the first textgrid
+unique(tg_data$tier_name)
+unique(tg2_data$tier_name)
+
+f_bind_tiers <- wrap_praat_script(
+  praat_location = praat_path,
+  script_code_to_run = bind_tiers,
+  return = "last-argument"
+)
+
+tg_out <- f_bind_tiers(tg, tg2, "p2fa-words,p2fa-phones", tg_out)
+
+tg_out_data <- readtextgrid::read_textgrid(tg_out)
+unique(tg_out_data$tier_name)
+```
+
+# Praat source code
+
+```{r, echo = FALSE, comment = ""}
+bind_tiers
+```
