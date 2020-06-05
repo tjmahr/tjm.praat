@@ -1,0 +1,27 @@
+# An iterator for a list of strings
+procedure stringsIter: .iter_name$, .id, .method$
+    selectObject: .id
+
+    # create a private namespace for this strings list iterator
+    .list$ = .iter_name$
+
+    if .method$ = "initialize"
+        .'.list$'.length = Get number of strings
+        .'.list$'.index = 0
+    endif
+
+    if .method$ = "next"
+        .'.list$'.index = .'.list$'.index + 1
+        .'.list$'.next$ = Get string: .'.list$'.index
+    endif
+
+    if .method$ = "has_next"
+        # .has_next is updated whenever procedure is invoked
+    endif
+
+    if .'.list$'.index < .'.list$'.length
+        .'.list$'.has_next = 1
+    else
+        .'.list$'.has_next = 0
+    endif
+endproc

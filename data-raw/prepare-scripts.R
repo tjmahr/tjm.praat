@@ -40,9 +40,14 @@ convert_tier_to_silences <- snips_list$`convert-tier-to-silences` %>%
   glue::glue_data(snips_list, .) %T>%
   writeLines("data-raw/convert_tier_to_silences.praat")
 
+bind_tiers <- snips_list$`bind-tiers` %>%
+  glue::glue_data(snips_list, .) %T>%
+  writeLines("data-raw/bind-tiers.praat")
+
 
 
 usethis::use_data(create_silences_textgrid, overwrite = TRUE)
 usethis::use_data(merge_duplicate_intervals, overwrite = TRUE)
 usethis::use_data(duplicate_tier, overwrite = TRUE)
 usethis::use_data(convert_tier_to_silences, overwrite = TRUE)
+usethis::use_data(bind_tiers, overwrite = TRUE)

@@ -1,72 +1,72 @@
 File type = "ooTextFile"
 Object class = "TextGrid"
 
-xmin = 0 
-xmax = 1.410861678004535 
-tiers? <exists> 
-size = 2 
-item []: 
+xmin = 0
+xmax = 1.410861678004535
+tiers? <exists>
+size = 2
+item []:
     item [1]:
-        class = "IntervalTier" 
-        name = "pf2a-words" 
-        xmin = 0 
-        xmax = 1.410861678004535 
-        intervals: size = 4 
+        class = "IntervalTier"
+        name = "p2fa-words"
+        xmin = 0
+        xmax = 1.410861678004535
+        intervals: size = 4
         intervals [1]:
-            xmin = 0 
-            xmax = 0.25 
-            text = "" 
+            xmin = 0
+            xmax = 0.25
+            text = ""
         intervals [2]:
-            xmin = 0.25 
-            xmax = 0.55 
-            text = "bird" 
+            xmin = 0.25
+            xmax = 0.55
+            text = "bird"
         intervals [3]:
-            xmin = 0.55 
-            xmax = 1.1081477347376283 
-            text = "house" 
+            xmin = 0.55
+            xmax = 1.1081477347376283
+            text = "house"
         intervals [4]:
-            xmin = 1.1081477347376283 
-            xmax = 1.410861678004535 
-            text = "" 
+            xmin = 1.1081477347376283
+            xmax = 1.410861678004535
+            text = ""
     item [2]:
-        class = "IntervalTier" 
-        name = "pf2a-phones" 
-        xmin = 0 
-        xmax = 1.410861678004535 
-        intervals: size = 9 
+        class = "IntervalTier"
+        name = "p2fa-phones"
+        xmin = 0
+        xmax = 1.410861678004535
+        intervals: size = 9
         intervals [1]:
-            xmin = 0 
-            xmax = 0.25 
-            text = "sil" 
+            xmin = 0
+            xmax = 0.25
+            text = "sil"
         intervals [2]:
-            xmin = 0.25 
-            xmax = 0.3307000071107512 
-            text = "B" 
+            xmin = 0.25
+            xmax = 0.3307000071107512
+            text = "B"
         intervals [3]:
-            xmin = 0.3307000071107512 
-            xmax = 0.46136388663732564 
-            text = "ER1" 
+            xmin = 0.3307000071107512
+            xmax = 0.46136388663732564
+            text = "ER1"
         intervals [4]:
-            xmin = 0.46136388663732564 
-            xmax = 0.55 
-            text = "D" 
+            xmin = 0.46136388663732564
+            xmax = 0.55
+            text = "D"
         intervals [5]:
-            xmin = 0.55 
-            xmax = 0.618380145228083 
-            text = "HH" 
+            xmin = 0.55
+            xmax = 0.618380145228083
+            text = "HH"
         intervals [6]:
-            xmin = 0.618380145228083 
-            xmax = 0.9470769612716908 
-            text = "AW1" 
+            xmin = 0.618380145228083
+            xmax = 0.9470769612716908
+            text = "AW1"
         intervals [7]:
-            xmin = 0.9470769612716908 
-            xmax = 1.1081477347376283 
-            text = "S" 
+            xmin = 0.9470769612716908
+            xmax = 1.1081477347376283
+            text = "S"
         intervals [8]:
-            xmin = 1.1081477347376283 
-            xmax = 1.39 
-            text = "sp" 
+            xmin = 1.1081477347376283
+            xmax = 1.39
+            text = "sp"
         intervals [9]:
-            xmin = 1.39 
-            xmax = 1.410861678004535 
-            text = "" 
+            xmin = 1.39
+            xmax = 1.410861678004535
+            text = ""
