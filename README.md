@@ -4,7 +4,6 @@
 # tjm.praat
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 The goal of tjm.praat is to make it easier to run
@@ -153,3 +152,20 @@ magick::image_read(png_result)
 
 Now, with a little [purrr](https://purrr.tidyverse.org/) magic, we could
 run this workflow on thousands of textgrids 😉.
+
+Finally, as a little test, I want to make sure the package works when
+spaces appear in the file names.
+
+``` r
+tg_out <- tempfile("demo with spaces in name", fileext = ".TextGrid")
+png_out <- tempfile("demo with spaces in name", fileext = ".png")
+
+tg_result <- tg_in %>% 
+  f_duplicate("phones", "pauses", "last", tg_out) %>% 
+  f_relabel("pauses", "^$|sil|sp", tg_out) %>% 
+  f_merge("pauses", tg_out)
+
+png_result <- f_draw_textgrid(tg_result, 3.5, 2, png_out)
+png_result
+#> [1] "C:\\Users\\Tristan\\AppData\\Local\\Temp\\RtmpyCsmyA\\demo with spaces in name3e486f772e42.png"
+```

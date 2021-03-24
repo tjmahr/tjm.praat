@@ -29,7 +29,11 @@ wrap_praat_script <- function(
       # Return what would be printed to InfoWindow
       results <- system2(
         praat_location,
-        c("--utf8", "--run", script_file_to_run, ...),
+        c(
+          "--utf8", "--run",
+          shQuote(script_file_to_run),
+          vapply(list(...), shQuote, "")
+        ),
         stdout = TRUE
       )
       return(results)
@@ -38,7 +42,11 @@ wrap_praat_script <- function(
       # pipe into other functions
       results <- system2(
         praat_location,
-        c("--utf8", "--run", script_file_to_run, ...)
+        c(
+          "--utf8", "--run",
+          shQuote(script_file_to_run),
+          vapply(list(...), shQuote, "")
+        )
       )
       return(...elt(...length()))
     }
