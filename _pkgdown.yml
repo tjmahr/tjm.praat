@@ -13,3 +13,11 @@ reference:
 - contents:
   - get_praat_form
   - set_textgrid_ext
+
+template:
+  bootstrap: 5
+  bslib:
+    bg: "#FFCCCC"
+    fg: "#111111"
+    primary: "#008383"
+    code-bg: "#FFFFCC"
