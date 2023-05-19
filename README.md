@@ -83,16 +83,35 @@ png_out <- tempfile("birdhouse", fileext = ".png")
 ```
 
 Shoot. I just forgot what the arguments are to this script. That’s okay,
-we can use a helper function to view the form.
+we can print the function to view the form.
 
 ``` r
-get_praat_form(script)
+f_draw_textgrid
+#> # <wrapped_praat_script>
+#> # <returning: last-argument>
 #> form Draw a textgrid
 #>   sentence Textgrid_in
 #>   integer Width 6
 #>   integer Height 4
 #>   sentence Png_out
 #> endform
+#> # ... with 6 more lines
+
+print(f_draw_textgrid, condense = FALSE)
+#> # <wrapped_praat_script>
+#> # <returning: last-argument>
+#> form Draw a textgrid
+#>   sentence Textgrid_in
+#>   integer Width 6
+#>   integer Height 4
+#>   sentence Png_out
+#> endform
+#> 
+#> Read from file: textgrid_in$
+#> Select outer viewport: 0, width, 0, height
+#> 
+#> Draw: 0, 0, "yes", "yes", "yes"
+#> Save as 300-dpi PNG file: png_out$
 ```
 
 Oh that’s right. *Width* then *height*. Now, let’s call the function and
@@ -133,14 +152,12 @@ f_merge     <- wrap_praat_script(praat_location, merge_duplicate_intervals)
 Let’s apply these scripts to our original example textgrid.
 
 ``` r
-library(magrittr, warn.conflicts = FALSE)
-
 tg_out <- tempfile("demo", fileext = ".TextGrid")
 png_out <- tempfile("demo", fileext = ".png")
 
-tg_result <- tg_in %>% 
-  f_duplicate("phones", "pauses", "last", tg_out) %>% 
-  f_relabel("pauses", "^$|sil|sp", tg_out) %>% 
+tg_result <- tg_in |> 
+  f_duplicate("phones", "pauses", "last", tg_out) |> 
+  f_relabel("pauses", "^$|sil|sp", tg_out) |>
   f_merge("pauses", tg_out)
 
 png_result <- f_draw_textgrid(tg_result, 7, 2, png_out)
@@ -160,12 +177,12 @@ spaces appear in the file names.
 tg_out <- tempfile("demo with spaces in name", fileext = ".TextGrid")
 png_out <- tempfile("demo with spaces in name", fileext = ".png")
 
-tg_result <- tg_in %>% 
-  f_duplicate("phones", "pauses", "last", tg_out) %>% 
-  f_relabel("pauses", "^$|sil|sp", tg_out) %>% 
+tg_result <- tg_in |> 
+  f_duplicate("phones", "pauses", "last", tg_out) |> 
+  f_relabel("pauses", "^$|sil|sp", tg_out) |> 
   f_merge("pauses", tg_out)
 
 png_result <- f_draw_textgrid(tg_result, 3.5, 2, png_out)
 png_result
-#> [1] "C:\\Users\\Tristan\\AppData\\Local\\Temp\\RtmpyCsmyA\\demo with spaces in name3e486f772e42.png"
+#> [1] "C:\\Users\\Tristan\\AppData\\Local\\Temp\\RtmpWgF5OH\\demo with spaces in name3f8d5b7c27.png"
 ```

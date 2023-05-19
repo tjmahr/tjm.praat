@@ -30,6 +30,6 @@ map2_chr(wavs, tgs, f_create_silences_textgrid) %>%
 # Praat source code
 
 ```{r, echo = FALSE, comment = ""}
-create_silences_textgrid
+print(f_create_silences_textgrid, condense = FALSE)
 ```
 

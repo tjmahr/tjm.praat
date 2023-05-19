@@ -19,13 +19,7 @@ merge_duplicate_intervals
 If successive intervals have the same label, they are merged together.
 }
 \section{Example usage}{
-\if{html}{\out{<div class="r">}}\preformatted{library(tjm.praat)
-library(magrittr)
-#> 
-#> Attaching package: 'magrittr'
-#> The following object is masked from 'package:purrr':
-#> 
-#>     set_names
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(tjm.praat)
 
 # Use the PATH to find praat
 praat_path <- Sys.which("praat")
@@ -60,7 +54,7 @@ f_merge_duplicate_intervals <- wrap_praat_script(
   return = "last-argument"
 )
 
-tg_data2 <- f_merge_duplicate_intervals(tg, "silence", tg_out) \%>\%
+tg_data2 <- f_merge_duplicate_intervals(tg, "silence", tg_out) |>
   readtextgrid::read_textgrid()
 
 tg_data2[tg_data2$tier_num == 3, c("tier_name", "xmin", "xmax", "text")]
@@ -76,7 +70,9 @@ tg_data2[tg_data2$tier_num == 3, c("tier_name", "xmin", "xmax", "text")]
 }
 
 \section{Praat source code}{
-\preformatted{form Merge duplicated interval labels
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# <wrapped_praat_script>
+# <returning: last-argument>
+form Merge duplicated interval labels
   sentence Textgrid_in
   sentence Target_tier silence
   sentence Textgrid_out
@@ -141,7 +137,7 @@ procedure findNumberForTier: .target_tier$
   endfor
 
 endproc
-}
+}\if{html}{\out{</div>}}
 }
 
 \keyword{datasets}

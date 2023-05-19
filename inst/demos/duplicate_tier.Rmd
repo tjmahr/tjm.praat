@@ -2,7 +2,6 @@
 
 ```{r, eval = TRUE, comment = "#>", collapse = TRUE}
 library(tjm.praat)
-library(magrittr, warn.conflicts = FALSE)
 
 # Use the PATH to find praat
 praat_path <- Sys.which("praat")
@@ -15,9 +14,9 @@ tg <- system.file(
 tg_out <- tempfile("test", fileext = ".TextGrid")
 
 # Note that there are three tiers
-tg %>% 
-  readtextgrid::read_textgrid() %>% 
-  magrittr::extract(c("tier_num", "tier_name")) %>% 
+tg |> 
+  readtextgrid::read_textgrid() |> 
+  magrittr::extract(c("tier_num", "tier_name")) |> 
   unique()
 
 f_duplicate_tier <- wrap_praat_script(
@@ -26,23 +25,23 @@ f_duplicate_tier <- wrap_praat_script(
   return = "last-argument"
 )
 
-tg_out <- tg %>% 
-  f_duplicate_tier("phones", "duplicate-is-first", "first", tg_out) %>% 
-  f_duplicate_tier("phones", "duplicate-is-last", "last", tg_out) %>% 
-  f_duplicate_tier("phones", "duplicate-is-after", "after", tg_out) %>% 
+tg_out <- tg |> 
+  f_duplicate_tier("phones", "duplicate-is-first", "first", tg_out) |> 
+  f_duplicate_tier("phones", "duplicate-is-last", "last", tg_out) |> 
+  f_duplicate_tier("phones", "duplicate-is-after", "after", tg_out) |> 
   f_duplicate_tier("phones", "duplicate-is-before", "before", tg_out)
 
 # We duplicated "phones" four times and 
 # placed the copy into separate locations
-tg_out %>% 
-  readtextgrid::read_textgrid() %>% 
-  magrittr::extract(c("tier_num", "tier_name")) %>% 
+tg_out |> 
+  readtextgrid::read_textgrid() |> 
+  magrittr::extract(c("tier_num", "tier_name")) |> 
   unique()
 ```
 
 # Praat source code
 
 ```{r, echo = FALSE, comment = ""}
-duplicate_tier
+print(f_duplicate_tier, condense = FALSE)
 ```
 

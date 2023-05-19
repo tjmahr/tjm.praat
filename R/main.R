@@ -11,8 +11,6 @@
 #'
 #' @details This function basically sets up a call to Praat's command-line
 #'   interface using `system2()`.
-#'
-#'
 wrap_praat_script <- function(
   praat_location,
   script_code_to_run,
@@ -24,7 +22,7 @@ wrap_praat_script <- function(
   script_file_to_run <- tempfile(fileext = ".praat")
   writeLines(script_code_to_run, con = script_file_to_run)
 
-  function(...) {
+  f <- function(...) {
     if (return == "info-window") {
       # Return what would be printed to InfoWindow
       results <- system2(
@@ -51,7 +49,59 @@ wrap_praat_script <- function(
       return(...elt(...length()))
     }
   }
+  class(f) <- c("wrapped_praat_script", "function")
+  attr(f, "script") <- script_code_to_run
+  attr(f, "returning") <- return
+  attr(f, "location") <- script_file_to_run
+  f
 }
+
+#' @export
+print.wrapped_praat_script <- function(x, condense = TRUE, ...) {
+  s <- format(x, condense = condense)
+  writeLines(s)
+  invisible(x)
+}
+
+#' @export
+format.wrapped_praat_script <- function(x, condense = TRUE, ...) {
+  # separate into lines if needed
+  script <- attr(x, "script") |>
+    strsplit("\\n") |>
+    # splitting on lines of just `"\\n"` leaves `character(0)` values
+    # so replace with `""` strings
+    lapply(function(x) if(length(x) == 0) "" else x) |>
+    unlist()
+
+  script_lines <- script
+
+  if (condense) {
+    # extract form or first 6 lines
+    form <- get_praat_form(paste0(script, collapse = "\n"))
+    found_form <- grepl("form", form)
+    if (found_form) {
+      script_lines <- strsplit(form, "\n") |> unlist()
+    } else {
+      script_lines <- utils::head(script)
+    }
+
+    # abbreviate script if needed
+    if (length(script_lines < length(script))) {
+      n_more_lines <- length(script) - length(script_lines)
+      line_label <- ngettext(n_more_lines, "line", "lines")
+      comment <- glue::glue("# ... with {n_more_lines} more {line_label}")
+      script_lines <- c(script_lines, comment)
+    }
+  }
+
+  c(
+    "# <wrapped_praat_script>",
+    paste0("# <returning: ", attr(x, "returning"), ">"),
+    script_lines
+  )
+}
+
+
 
 #' Extract the form from a Praat script
 #' @param x a single string (a Praat script)

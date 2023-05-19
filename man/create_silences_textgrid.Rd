@@ -18,7 +18,7 @@ create_silences_textgrid
 Create a silences textgrid
 }
 \section{Example usage}{
-\if{html}{\out{<div class="r">}}\preformatted{library(tjm.praat)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(tjm.praat)
 library(purrr)
 library(readtextgrid)
 
@@ -43,27 +43,29 @@ f_create_silences_textgrid <- wrap_praat_script(
 map2_chr(wavs, tgs, f_create_silences_textgrid) \%>\%
   map_df(read_textgrid)
 #> # A tibble: 6 x 10
-#>   file  tier_num tier_name tier_type tier_xmin tier_xmax  xmin  xmax text 
-#>   <chr>    <dbl> <chr>     <chr>         <dbl>     <dbl> <dbl> <dbl> <chr>
-#> 1 the_~        1 silences  Interval~         0       0.6 0     0.464 soun~
-#> 2 the_~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
-#> 3 the_~        1 silences  Interval~         0       0.6 0     0.464 soun~
-#> 4 the_~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
-#> 5 the_~        1 silences  Interval~         0       0.6 0     0.464 soun~
-#> 6 the_~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
-#> # ... with 1 more variable: annotation_num <int>
+#>   file        tier_num tier_name tier_type tier_xmin tier_xmax  xmin  xmax text 
+#>   <chr>          <dbl> <chr>     <chr>         <dbl>     <dbl> <dbl> <dbl> <chr>
+#> 1 the_B.Text~        1 silences  Interval~         0       0.6 0     0.464 soun~
+#> 2 the_B.Text~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
+#> 3 the_D.Text~        1 silences  Interval~         0       0.6 0     0.464 soun~
+#> 4 the_D.Text~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
+#> 5 the_V.Text~        1 silences  Interval~         0       0.6 0     0.464 soun~
+#> 6 the_V.Text~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
+#> # i 1 more variable: annotation_num <int>
 }\if{html}{\out{</div>}}
 }
 
 \section{Praat source code}{
-\preformatted{form Make silence textgrid
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# <wrapped_praat_script>
+# <returning: last-argument>
+form Make silence textgrid
     sentence Wav_file_in
     sentence Textgrid_out
 endform
 Read from file: wav_file_in$
 To TextGrid (silences): 100, 0, -25, 0.1, 0.1, "silent", "sounding"
 Save as text file: textgrid_out$
-}
+}\if{html}{\out{</div>}}
 }
 
 \keyword{datasets}

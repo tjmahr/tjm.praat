@@ -22,8 +22,7 @@ on top of another. Here we pull selected tiers from one textgrid and bind
 them onto another other one.
 }
 \section{Example usage}{
-\if{html}{\out{<div class="r">}}\preformatted{library(tjm.praat)
-library(magrittr)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(tjm.praat)
 
 # Use the PATH to find praat
 praat_path <- Sys.which("praat")
@@ -65,7 +64,9 @@ unique(tg_out_data$tier_name)
 }
 
 \section{Praat source code}{
-\preformatted{form Copy tiers from one textgrid (sender) onto another (reciever)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# <wrapped_praat_script>
+# <returning: last-argument>
+form Copy tiers from one textgrid (sender) onto another (reciever)
   sentence Textgrid_receiver
   sentence Textgrid_sender
   sentence Tiers_to_pull
@@ -151,7 +152,7 @@ procedure stringsIter: .iter_name$, .id, .method$
         .'.list$'.has_next = 0
     endif
 endproc
-}
+}\if{html}{\out{</div>}}
 }
 
 \keyword{datasets}

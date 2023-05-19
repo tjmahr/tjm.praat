@@ -22,8 +22,7 @@ duplicate_tier
 Duplicate (and rename) a textgrid tier.
 }
 \section{Example usage}{
-\if{html}{\out{<div class="r">}}\preformatted{library(tjm.praat)
-library(magrittr, warn.conflicts = FALSE)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(tjm.praat)
 
 # Use the PATH to find praat
 praat_path <- Sys.which("praat")
@@ -36,9 +35,9 @@ tg <- system.file(
 tg_out <- tempfile("test", fileext = ".TextGrid")
 
 # Note that there are three tiers
-tg \%>\% 
-  readtextgrid::read_textgrid() \%>\% 
-  magrittr::extract(c("tier_num", "tier_name")) \%>\% 
+tg |> 
+  readtextgrid::read_textgrid() |> 
+  magrittr::extract(c("tier_num", "tier_name")) |> 
   unique()
 #> # A tibble: 3 x 2
 #>   tier_num tier_name
@@ -53,17 +52,17 @@ f_duplicate_tier <- wrap_praat_script(
   return = "last-argument"
 )
 
-tg_out <- tg \%>\% 
-  f_duplicate_tier("phones", "duplicate-is-first", "first", tg_out) \%>\% 
-  f_duplicate_tier("phones", "duplicate-is-last", "last", tg_out) \%>\% 
-  f_duplicate_tier("phones", "duplicate-is-after", "after", tg_out) \%>\% 
+tg_out <- tg |> 
+  f_duplicate_tier("phones", "duplicate-is-first", "first", tg_out) |> 
+  f_duplicate_tier("phones", "duplicate-is-last", "last", tg_out) |> 
+  f_duplicate_tier("phones", "duplicate-is-after", "after", tg_out) |> 
   f_duplicate_tier("phones", "duplicate-is-before", "before", tg_out)
 
 # We duplicated "phones" four times and 
 # placed the copy into separate locations
-tg_out \%>\% 
-  readtextgrid::read_textgrid() \%>\% 
-  magrittr::extract(c("tier_num", "tier_name")) \%>\% 
+tg_out |> 
+  readtextgrid::read_textgrid() |> 
+  magrittr::extract(c("tier_num", "tier_name")) |> 
   unique()
 #> # A tibble: 7 x 2
 #>   tier_num tier_name          
@@ -79,7 +78,9 @@ tg_out \%>\%
 }
 
 \section{Praat source code}{
-\preformatted{form Duplicate a TextGrid tier
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# <wrapped_praat_script>
+# <returning: last-argument>
+form Duplicate a TextGrid tier
   sentence Textgrid_in
   sentence Target_tier phones
   sentence Duplicate_name phones2
@@ -137,7 +138,7 @@ procedure findNumberForTier: .target_tier$
   endfor
 
 endproc
-}
+}\if{html}{\out{</div>}}
 }
 
 \keyword{datasets}

@@ -93,10 +93,12 @@ png_out <- tempfile("birdhouse", fileext = ".png")
 ```
 
 Shoot. I just forgot what the arguments are to this script. That's okay, we 
-can use a helper function to view the form.
+can print the function to view the form.
 
 ```{r}
-get_praat_form(script)
+f_draw_textgrid
+
+print(f_draw_textgrid, condense = FALSE)
 ```
 
 Oh that's right. *Width* then *height*. Now, let's call the function and view
@@ -133,14 +135,12 @@ f_merge     <- wrap_praat_script(praat_location, merge_duplicate_intervals)
 Let's apply these scripts to our original example textgrid.
 
 ```{r png-demo-2}
-library(magrittr, warn.conflicts = FALSE)
-
 tg_out <- tempfile("demo", fileext = ".TextGrid")
 png_out <- tempfile("demo", fileext = ".png")
 
-tg_result <- tg_in %>% 
-  f_duplicate("phones", "pauses", "last", tg_out) %>% 
-  f_relabel("pauses", "^$|sil|sp", tg_out) %>% 
+tg_result <- tg_in |> 
+  f_duplicate("phones", "pauses", "last", tg_out) |> 
+  f_relabel("pauses", "^$|sil|sp", tg_out) |>
   f_merge("pauses", tg_out)
 
 png_result <- f_draw_textgrid(tg_result, 7, 2, png_out)
@@ -149,7 +149,7 @@ magick::image_read(png_result)
 ```
 
 Now, with a little [purrr](https://purrr.tidyverse.org/) magic, we could run
-this workflow on thousands of textgrids `r emo::ji("wink")`.
+this workflow on thousands of textgrids 😉.
 
 Finally, as a little test, I want to make sure the package works when spaces
 appear in the file names.
@@ -158,9 +158,9 @@ appear in the file names.
 tg_out <- tempfile("demo with spaces in name", fileext = ".TextGrid")
 png_out <- tempfile("demo with spaces in name", fileext = ".png")
 
-tg_result <- tg_in %>% 
-  f_duplicate("phones", "pauses", "last", tg_out) %>% 
-  f_relabel("pauses", "^$|sil|sp", tg_out) %>% 
+tg_result <- tg_in |> 
+  f_duplicate("phones", "pauses", "last", tg_out) |> 
+  f_relabel("pauses", "^$|sil|sp", tg_out) |> 
   f_merge("pauses", tg_out)
 
 png_result <- f_draw_textgrid(tg_result, 3.5, 2, png_out)

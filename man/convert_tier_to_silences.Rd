@@ -24,8 +24,7 @@ Interval text that matches the silence pattern is replaced with \code{"silent"}.
 All others are replaced with \code{"sounding"}.
 }
 \section{Example usage}{
-\if{html}{\out{<div class="r">}}\preformatted{library(tjm.praat)
-library(magrittr)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(tjm.praat)
 
 # Use the PATH to find praat
 praat_path <- Sys.which("praat")
@@ -60,8 +59,8 @@ f_convert_tier_to_silences <- wrap_praat_script(
   return = "last-argument"
 )
 
-tg_data2 <- tg \%>\% 
-  f_convert_tier_to_silences("phones", "^$|sil|sp", tg_out) \%>\%
+tg_data2 <- tg |> 
+  f_convert_tier_to_silences("phones", "^$|sil|sp", tg_out) |>
   readtextgrid::read_textgrid()
 
 tg_data2[tg_data2$tier_num == 2, c("tier_name", "xmin", "xmax", "text")]
@@ -82,7 +81,9 @@ tg_data2[tg_data2$tier_num == 2, c("tier_name", "xmin", "xmax", "text")]
 }
 
 \section{Praat source code}{
-\preformatted{form Convert annotations into "silence" and "sounding"
+\if{html}{\out{<div class="sourceCode">}}\preformatted{# <wrapped_praat_script>
+# <returning: last-argument>
+form Convert annotations into "silence" and "sounding"
   sentence Textgrid_in
   sentence Target_tier phones
   sentence Silence_regex ^$|sil|sp
@@ -116,7 +117,7 @@ procedure findNumberForTier: .target_tier$
   endfor
 
 endproc
-}
+}\if{html}{\out{</div>}}
 }
 
 \keyword{datasets}

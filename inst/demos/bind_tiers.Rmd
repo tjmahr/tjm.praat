@@ -2,7 +2,6 @@
 
 ```{r, eval = TRUE, comment = "#>", collapse = TRUE}
 library(tjm.praat)
-library(magrittr)
 
 # Use the PATH to find praat
 praat_path <- Sys.which("praat")
@@ -42,5 +41,5 @@ unique(tg_out_data$tier_name)
 # Praat source code
 
 ```{r, echo = FALSE, comment = ""}
-bind_tiers
+print(f_bind_tiers, condense = FALSE)
 ```
