@@ -58,13 +58,20 @@ wrap_praat_script <- function(
 
 #' @export
 print.wrapped_praat_script <- function(x, condense = TRUE, ...) {
-  s <- format(x, condense = condense)
-  writeLines(s)
+  l <- format(x, condense = condense)
+  cli::cli({
+      cli::cli_text(l$signature)
+      cli::cli_text("# <wrapped_praat_script>")
+      cli::cli_text("# <returning: {.field {l$returning}}>")
+      cli::cli_code(cli::style_italic(l$script_lines), language = "praat")
+    })
   invisible(x)
 }
 
 #' @export
 format.wrapped_praat_script <- function(x, condense = TRUE, ...) {
+  signature <- format(args(x))[1]
+
   # separate into lines if needed
   script <- attr(x, "script") |>
     strsplit("\\n") |>
@@ -94,11 +101,12 @@ format.wrapped_praat_script <- function(x, condense = TRUE, ...) {
     }
   }
 
-  c(
-    "# <wrapped_praat_script>",
-    paste0("# <returning: ", attr(x, "returning"), ">"),
-    script_lines
+  l <- list(
+    returning = attr(x, "returning"),
+    signature = signature,
+    script_lines = script_lines
   )
+  l
 }
 
 

@@ -109,6 +109,26 @@ result <- f_draw_textgrid(tg_in, 7, 2, png_out)
 magick::image_read(result) 
 ```
 
+```{r, eval = TRUE}
+# in-development function
+new_praat_function <- tjm.praat:::new_praat_function
+
+f_draw_textgrid <- new_praat_function(
+  script_code_to_run = script,
+  return = "last-argument",
+  praat_location = praat_location
+)
+f_draw_textgrid
+
+file.remove(png_out)
+f_draw_textgrid(tg_in, 7, 2, png_out)
+
+file.remove(png_out)
+f_draw_textgrid(png_out = png_out, tg_in, width = 7, 2)
+
+```
+
+
 
 ## Example using bundled Praat scripts
 

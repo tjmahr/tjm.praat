@@ -87,6 +87,7 @@ we can print the function to view the form.
 
 ``` r
 f_draw_textgrid
+#> function (...)
 #> # <wrapped_praat_script>
 #> # <returning: last-argument>
 #> form Draw a textgrid
@@ -98,6 +99,7 @@ f_draw_textgrid
 #> # ... with 6 more lines
 
 print(f_draw_textgrid, condense = FALSE)
+#> function (...)
 #> # <wrapped_praat_script>
 #> # <returning: last-argument>
 #> form Draw a textgrid
@@ -106,10 +108,8 @@ print(f_draw_textgrid, condense = FALSE)
 #>   integer Height 4
 #>   sentence Png_out
 #> endform
-#> 
 #> Read from file: textgrid_in$
 #> Select outer viewport: 0, width, 0, height
-#> 
 #> Draw: 0, 0, "yes", "yes", "yes"
 #> Save as 300-dpi PNG file: png_out$
 ```
@@ -123,6 +123,38 @@ magick::image_read(result)
 ```
 
 <img src="man/figures/README-png-demo-1.png" width="100%" />
+
+``` r
+# in-development function
+new_praat_function <- tjm.praat:::new_praat_function
+
+f_draw_textgrid <- new_praat_function(
+  script_code_to_run = script,
+  return = "last-argument",
+  praat_location = praat_location
+)
+f_draw_textgrid
+#> function (textgrid_in = NULL, width = "6", height = "4", png_out = NULL)
+#> # <wrapped_praat_script>
+#> # <returning: last-argument>
+#> form Draw a textgrid
+#>   sentence Textgrid_in
+#>   integer Width 6
+#>   integer Height 4
+#>   sentence Png_out
+#> endform
+#> # ... with 6 more lines
+
+file.remove(png_out)
+#> [1] TRUE
+f_draw_textgrid(tg_in, 7, 2, png_out)
+#> [1] "C:\\Users\\Tristan\\AppData\\Local\\Temp\\Rtmp0e69Ww\\birdhouse552c5c7f7e1c.png"
+
+file.remove(png_out)
+#> [1] TRUE
+f_draw_textgrid(png_out = png_out, tg_in, width = 7, 2)
+#> [1] "C:\\Users\\Tristan\\AppData\\Local\\Temp\\Rtmp0e69Ww\\birdhouse552c5c7f7e1c.png"
+```
 
 ## Example using bundled Praat scripts
 
@@ -184,5 +216,5 @@ tg_result <- tg_in |>
 
 png_result <- f_draw_textgrid(tg_result, 3.5, 2, png_out)
 png_result
-#> [1] "C:\\Users\\Tristan\\AppData\\Local\\Temp\\RtmpWgF5OH\\demo with spaces in name3f8d5b7c27.png"
+#> [1] "C:\\Users\\Tristan\\AppData\\Local\\Temp\\Rtmp0e69Ww\\demo with spaces in name552c30c66d9.png"
 ```
