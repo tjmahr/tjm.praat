@@ -21,9 +21,6 @@ If successive intervals have the same label, they are merged together.
 \section{Example usage}{
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(tjm.praat)
 
-# Use the PATH to find praat
-praat_path <- Sys.which("praat")
-
 # This example textgrid has back-to-back sounding/silence labels
 tg <- system.file(
   "demo-textgrids/merge-duplicate-intervals.TextGrid",
@@ -49,9 +46,8 @@ tg_data[tg_data$tier_num == 3, c("tier_name", "xmin", "xmax", "text")]
 tg_out <- tempfile("test", fileext = ".TextGrid")
 
 f_merge_duplicate_intervals <- wrap_praat_script(
-  praat_location = praat_path,
   script_code_to_run = merge_duplicate_intervals,
-  return = "last-argument"
+  returning = "last-argument"
 )
 
 tg_data2 <- f_merge_duplicate_intervals(tg, "silence", tg_out) |>
@@ -70,9 +66,10 @@ tg_data2[tg_data2$tier_num == 3, c("tier_name", "xmin", "xmax", "text")]
 }
 
 \section{Praat source code}{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{function (...)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{print(f_merge_duplicate_intervals, condense = FALSE)
+function (textgrid_in = NULL, target_tier = "silence", textgrid_out = NULL)
 # <wrapped_praat_script>
-# <returning: last-argument>
+# returning: "last-argument"
 form Merge duplicated interval labels
   sentence Textgrid_in
   sentence Target_tier silence
@@ -82,7 +79,7 @@ Read from file: textgrid_in$
 @findNumberForTier: target_tier$
 @labelMerger: "initialize", findNumberForTier.result
 while labelMerger.has_next
-    @labelMerger: "merge-or-step", findNumberForTier.result
+	@labelMerger: "merge-or-step", findNumberForTier.result
 endwhile
 Save as text file: textgrid_out$
 # Object for merging duplicated textgrid interval labels
@@ -123,9 +120,6 @@ procedure findNumberForTier: .target_tier$
   endfor
 endproc
 }\if{html}{\out{</div>}}
-
-[tg_data$tier_num == 3, c("tier_name", "xmin", "xmax", "text")]: R:tg_data$tier_num\%20==\%203,\%20c(\%22tier_name\%22,\%20\%22xmin\%22,\%20\%22xmax\%22,\%20\%22text\%22)
-[tg_data2$tier_num == 3, c("tier_name", "xmin", "xmax", "text")]: R:tg_data2$tier_num\%20==\%203,\%20c(\%22tier_name\%22,\%20\%22xmin\%22,\%20\%22xmax\%22,\%20\%22text\%22)
 }
 
 \keyword{datasets}

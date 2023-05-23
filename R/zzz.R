@@ -1,9 +1,12 @@
 .onLoad <- function(libname, pkgname) {
   op <- options()
 
-  path <- Sys.which("praat")
-  option_value <- if (path != "") path else NULL
-
+  path <- unname(Sys.which("praat")[1])
+  option_value <- if (file.exists(path)) {
+    normalizePath(path, winslash = "/")
+  } else {
+    NULL
+  }
   op_tjm.praat <- list(
     tjm.praat_location = option_value
   )

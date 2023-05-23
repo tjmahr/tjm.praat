@@ -32,6 +32,7 @@ You can install tjm.praat from [GitHub](https://github.com/) with:
 # install.packages("devtools")
 devtools::install_github("tjmahr/tjm.praat")
 ```
+
 ## Example of wrapping a Praat script as a function
 
 Let's make a function that draws a Praat textgrid and saves the image as `.png`
@@ -58,18 +59,34 @@ script <- glue::glue(
 )
 ```
 
+Before we can wrap the script into a function, we need to set the **Praat 
+location**. By default, tjm.praat searches for a location in 
+`options("tjm.praat_location")` and `Sys.which("praat")`. So, on my machine, 
+tjm.praat manages to find a Praat executable:
+
+```{r}
+library(tjm.praat)
+get_praat_location()
+```
+
+But if I want to set or override this location, I can set the location for the 
+R session. For example, here I point to the copy of Praat.exe on my desktop.
+
+```{r}
+# Trying to use a relative path for the demo. 
+# (These are normalized anyways).
+set_praat_location("~/../Desktop/Praat.exe")
+
+get_praat_location()
+```
+
+
 Now, we can convert this script into an R function. We tell
 `wrap_praat_script()` to return the last argument of the script (`png_out$` in
 this example) back to R after the script runs.
 
 ```{r}
-library(tjm.praat)
-
-# Find where Praat lives on my machine
-praat_location <- Sys.which("praat")
-
 f_draw_textgrid <- wrap_praat_script(
-  praat_location = praat_location, 
   script_code_to_run = script,
   return = "last-argument"
 )
@@ -93,7 +110,7 @@ png_out <- tempfile("birdhouse", fileext = ".png")
 ```
 
 Shoot. I just forgot what the arguments are to this script. That's okay, we 
-can print the function to view the form.
+can **print the function to view the script form**. 
 
 ```{r}
 f_draw_textgrid
@@ -109,26 +126,27 @@ result <- f_draw_textgrid(tg_in, 7, 2, png_out)
 magick::image_read(result) 
 ```
 
-```{r, eval = TRUE}
-# in-development function
-new_praat_function <- tjm.praat:::new_praat_function
+Note that when we printed the wrapped script's function, the first line of the
+output (**the function signature**) included the names of the variables in the Praat
+form. Indeed, the arguments to this function are set based on the Praat
+form:
 
-f_draw_textgrid <- new_praat_function(
-  script_code_to_run = script,
-  return = "last-argument",
-  praat_location = praat_location
-)
-f_draw_textgrid
-
-file.remove(png_out)
-f_draw_textgrid(tg_in, 7, 2, png_out)
-
-file.remove(png_out)
-f_draw_textgrid(png_out = png_out, tg_in, width = 7, 2)
-
+```{r}
+args(f_draw_textgrid)
 ```
 
+This feature means that a text's editor autocomplete/hint system can help us
+remember the arguments to the Praat script and that we can reorder the arguments
+in the function call as long as we use the correct names.
 
+```{r}
+result <- f_draw_textgrid(
+  png_out = png_out, 
+  height = 2,
+  width = 7, 
+  textgrid_in = tg_in
+)
+```
 
 ## Example using bundled Praat scripts
 
@@ -147,9 +165,9 @@ So I wrote a script for each of these steps. The last-argument of each script is
 a Praat textgrid, so I can pipe these wrapped-script functions into each other.
 
 ```{r}
-f_duplicate <- wrap_praat_script(praat_location, duplicate_tier)
-f_relabel   <- wrap_praat_script(praat_location, convert_tier_to_silences)
-f_merge     <- wrap_praat_script(praat_location, merge_duplicate_intervals)
+f_duplicate <- wrap_praat_script(duplicate_tier)
+f_relabel   <- wrap_praat_script(convert_tier_to_silences)
+f_merge     <- wrap_praat_script(merge_duplicate_intervals)
 ```
 
 Let's apply these scripts to our original example textgrid.
@@ -184,5 +202,11 @@ tg_result <- tg_in |>
   f_merge("pauses", tg_out)
 
 png_result <- f_draw_textgrid(tg_result, 3.5, 2, png_out)
-png_result
+basename(png_result)
 ```
+
+## Acknowledgments
+
+tjm.praat was created to process data from the [WISC Lab
+project](https://kidspeech.wisc.edu/). Thus, development of this package was
+supported by NIH R01DC009411 and NIH R01DC015653.

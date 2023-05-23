@@ -1,0 +1,39 @@
+# Example usage
+
+```{r, eval = TRUE, comment = "#>", collapse = TRUE, fig.height = 3, fig.width = 7}
+library(tjm.praat)
+
+wav <- system.file(
+  "test-wavs-a/tidyverse-tidyverse.wav",
+  package = "tjm.praat"
+)
+
+spectrogram_out <- tempfile("tidyverse-tidyverse", fileext = ".Spectrogram")
+
+f_create_spectrogram <- wrap_praat_script(
+  script_code_to_run = create_spectrogram,
+  returning = "last-argument"
+)
+
+data_spectrogram <- wav |> 
+  f_create_spectrogram(
+    spectrogram_out = spectrogram_out, 
+    max_frequency = 6000
+  ) |> 
+  read_spectrogram()
+
+library(ggplot2)
+ggplot(data_spectrogram) + 
+  aes(x = time, y = frequency) +
+  geom_raster(aes(fill = db)) +
+  theme_minimal() +
+  scale_fill_viridis_c(option = "C") +
+  labs(x = "time [s]", y = "frequency [Hz]", fill = "dB SPL")
+```
+
+# Praat source code
+
+```{r, echo = TRUE, comment = ""}
+print(f_create_spectrogram, condense = FALSE)
+```
+

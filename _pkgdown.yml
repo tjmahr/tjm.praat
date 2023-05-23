@@ -2,6 +2,7 @@ reference:
 - title: "R functions for using Praat scripts"
 - contents:
   - wrap_praat_script
+  - matches("praat_location")
 - title: "Included Praat scripts"
 - contents:
   - create_silences_textgrid
@@ -9,10 +10,12 @@ reference:
   - duplicate_tier
   - merge_duplicate_intervals
   - bind_tiers
+  - create_spectrogram
 - title: "Etc."
 - contents:
   - get_praat_form
   - set_textgrid_ext
+  - read_spectrogram
 
 template:
   bootstrap: 5

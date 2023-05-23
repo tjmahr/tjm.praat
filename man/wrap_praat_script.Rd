@@ -5,19 +5,20 @@
 \title{Make a function that runs a Praat script}
 \usage{
 wrap_praat_script(
-  praat_location,
   script_code_to_run,
-  return = c("last-argument", "info-window")
+  returning = c("last-argument", "info-window"),
+  praat_location = get_praat_location()
 )
 }
 \arguments{
-\item{praat_location}{path to the Praat executable}
+\item{script_code_to_run}{a Praat script to run.}
 
-\item{script_code_to_run}{Praat script to run}
-
-\item{return}{value to return. \code{"last-argument"} returns the last argument to
+\item{returning}{value to return. \code{"last-argument"} returns the last argument to
 the Praat script. \code{"info-window"} returns the contents of the Praat Info
 Window.}
+
+\item{praat_location}{path to the Praat executable. Defaults to the value
+provided by \code{\link[=get_praat_location]{get_praat_location()}}.}
 }
 \value{
 see \code{return} argument

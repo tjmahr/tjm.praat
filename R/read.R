@@ -2,7 +2,7 @@
 #' @param path path to a .Spectrogram file
 #' @return a dataframe with the Spectrogram data
 #' @export
-read_spectogram <- function(path) {
+read_spectrogram <- function(path) {
   lines <- readLines(path)
 
   powers <- lines |>

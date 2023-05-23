@@ -25,6 +25,9 @@
     <loc>/reference/create_silences_textgrid.html</loc>
   </url>
   <url>
+    <loc>/reference/create_spectrogram.html</loc>
+  </url>
+  <url>
     <loc>/reference/duplicate_tier.html</loc>
   </url>
   <url>
@@ -35,6 +38,12 @@
   </url>
   <url>
     <loc>/reference/merge_duplicate_intervals.html</loc>
+  </url>
+  <url>
+    <loc>/reference/praat_location.html</loc>
+  </url>
+  <url>
+    <loc>/reference/read_spectrogram.html</loc>
   </url>
   <url>
     <loc>/reference/set_textgrid_ext.html</loc>

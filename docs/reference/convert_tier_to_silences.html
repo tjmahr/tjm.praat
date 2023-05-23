@@ -12,7 +12,7 @@ All others are replaced with "sounding".'><!-- mathjax --><script src="https://c
     
     <a class="navbar-brand me-2" href="../index.html">tjm.praat</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,9 +77,6 @@ silences.</p></dd>
     <h2 id="example-usage">Example usage<a class="anchor" aria-label="anchor" href="#example-usage"></a></h2>
     <p></p><div class="sourceCode r"><pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tjmahr/tjm.praat" class="external-link">tjm.praat</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Use the PATH to find praat</span></span>
-<span><span class="va">praat_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.which.html" class="external-link">Sys.which</a></span><span class="op">(</span><span class="st">"praat"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">tg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
 <span>  <span class="st">"demo-textgrids/merge-duplicate-intervals.TextGrid"</span>,</span>
 <span>  package <span class="op">=</span> <span class="st">"tjm.praat"</span></span>
@@ -105,9 +102,8 @@ silences.</p></dd>
 <span><span class="co">#&gt; 10 phones     1.39  1.41 ""</span></span>
 <span></span>
 <span><span class="va">f_convert_tier_to_silences</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wrap_praat_script.html">wrap_praat_script</a></span><span class="op">(</span></span>
-<span>  praat_location <span class="op">=</span> <span class="va">praat_path</span>,</span>
 <span>  script_code_to_run <span class="op">=</span> <span class="va">convert_tier_to_silences</span>,</span>
-<span>  return <span class="op">=</span> <span class="st">"last-argument"</span></span>
+<span>  returning <span class="op">=</span> <span class="st">"last-argument"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">tg_data2</span> <span class="op">&lt;-</span> <span class="va">tg</span> <span class="op">|&gt;</span> </span>
@@ -131,44 +127,38 @@ silences.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="praat-source-code">Praat source code<a class="anchor" aria-label="anchor" href="#praat-source-code"></a></h2>
-    <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># &lt;wrapped_praat_script&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># &lt;returning: last-argument&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>form Convert annotations into <span class="st">"silence"</span> and <span class="st">"sounding"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  sentence Textgrid_in</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  sentence Target_tier phones</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  sentence Silence_regex <span class="sc">^</span><span class="er">$|</span>sil<span class="sc">|</span>sp</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  sentence Textgrid_out</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>endform</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>Read from file<span class="sc">:</span> textgrid_in<span class="sc">$</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="er">@</span>findNumberForTier<span class="sc">:</span> target_tier<span class="sc">$</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>Replace interval texts<span class="sc">:</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>... findNumberForTier.result, <span class="dv">1</span>, <span class="dv">0</span>,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>... silence_regex<span class="sc">$</span>, <span class="st">"silent"</span>, <span class="st">"Regular Expressions"</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>Replace interval texts<span class="sc">:</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>... findNumberForTier.result, <span class="dv">1</span>, <span class="dv">0</span>,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>... <span class="st">"^((?!silent).)*$"</span>, <span class="st">"sounding"</span>, <span class="st">"Regular Expressions"</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>Save as text file<span class="sc">:</span> textgrid_out<span class="sc">$</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the number of the (last) tier with a given name</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>procedure findNumberForTier<span class="sc">:</span> .target_tier<span class="sc">$</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  .tiers <span class="ot">=</span> Get number of tiers</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  .result <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> .tier_i to .tiers</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    .tier_i_name<span class="sc">$</span> <span class="er">=</span> Get tier name<span class="sc">:</span> .tier_i</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> .tier_i_name<span class="sc">$</span> <span class="er">==</span> .target_tier<span class="sc">$</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        .result <span class="ot">=</span> .tier_i</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>      endif</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  endfor</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>endproc</span></code></pre><p></p></div>
-<p>[tg_data$tier_num == 2, c("tier_name", "xmin", "xmax", "text")]: R:tg_data$tier_num%20==%202,%20c(%22tier_name%22,%20%22xmin%22,%20%22xmax%22,%20%22text%22)
-[tg_data2$tier_num == 2, c("tier_name", "xmin", "xmax", "text")]: R:tg_data2$tier_num%20==%202,%20c(%22tier_name%22,%20%22xmin%22,%20%22xmax%22,%20%22text%22)</p>
+    <p></p><div class="sourceCode r"><pre><code>print(f_convert_tier_to_silences, condense = FALSE)
+function (textgrid_in = NULL, target_tier = "phones", silence_regex =
+"$|sil|sp", textgrid_out = NULL)
+# &lt;wrapped_praat_script&gt;
+# returning: "last-argument"
+form Convert annotations into "silence" and "sounding"
+  sentence Textgrid_in
+  sentence Target_tier phones
+  sentence Silence_regex ^$|sil|sp
+  sentence Textgrid_out
+endform
+Read from file: textgrid_in$
+@findNumberForTier: target_tier$
+Replace interval texts:
+... findNumberForTier.result, 1, 0,
+... silence_regex$, "silent", "Regular Expressions"
+Replace interval texts:
+... findNumberForTier.result, 1, 0,
+... "^((?!silent).)*$", "sounding", "Regular Expressions"
+Save as text file: textgrid_out$
+# Find the number of the (last) tier with a given name
+procedure findNumberForTier: .target_tier$
+  .tiers = Get number of tiers
+  .result = 0
+  for .tier_i to .tiers
+    .tier_i_name$ = Get tier name: .tier_i
+      if .tier_i_name$ == .target_tier$
+        .result = .tier_i
+      endif
+  endfor
+endproc
+</code></pre><p></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

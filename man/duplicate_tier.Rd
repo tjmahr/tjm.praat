@@ -24,9 +24,6 @@ Duplicate (and rename) a textgrid tier.
 \section{Example usage}{
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(tjm.praat)
 
-# Use the PATH to find praat
-praat_path <- Sys.which("praat")
-
 tg <- system.file(
   "demo-textgrids/merge-duplicate-intervals.TextGrid",
   package = "tjm.praat"
@@ -47,9 +44,8 @@ tg |>
 #> 3        3 silence
 
 f_duplicate_tier <- wrap_praat_script(
-  praat_location = praat_path,
   script_code_to_run = duplicate_tier,
-  return = "last-argument"
+  returning = "last-argument"
 )
 
 tg_out <- tg |> 
@@ -78,9 +74,11 @@ tg_out |>
 }
 
 \section{Praat source code}{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{function (...)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{print(f_duplicate_tier, condense = FALSE)
+function (textgrid_in = NULL, target_tier = "phones", duplicate_name =
+"phones2", duplicate_position = "1", textgrid_out = NULL)
 # <wrapped_praat_script>
-# <returning: last-argument>
+# returning: "last-argument"
 form Duplicate a TextGrid tier
   sentence Textgrid_in
   sentence Target_tier phones
