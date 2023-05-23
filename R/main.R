@@ -1,4 +1,21 @@
 
+#' Praat location
+#' @param path k
+#' @return k
+#' @export
+#' @rdname praat_location
+set_praat_location <- function(path) {
+  options("tjm.praat_location" = path)
+  path
+}
+
+#' @rdname praat_location
+#' @export
+get_praat_location <- function() {
+  getOption("tjm.praat_location")
+}
+
+
 #' Make a function that runs a Praat script
 #'
 #' @param praat_location path to the Praat executable

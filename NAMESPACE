@@ -3,6 +3,8 @@
 S3method(format,wrapped_praat_script)
 S3method(print,wrapped_praat_script)
 export(get_praat_form)
+export(get_praat_location)
 export(read_spectogram)
+export(set_praat_location)
 export(set_textgrid_ext)
 export(wrap_praat_script)
