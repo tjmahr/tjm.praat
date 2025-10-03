@@ -5,11 +5,7 @@ library(tjm.praat)
 library(purrr)
 library(readtextgrid)
 
-# Use the PATH to find praat
-praat_path <- Sys.which("praat")
-
 # Locate some wav files
-
 dir <- system.file("test-wavs-a/", package = "tjm.praat")
 wavs <- list.files(dir, pattern = ".wav", full.names = TRUE)
 
@@ -17,7 +13,6 @@ wavs <- list.files(dir, pattern = ".wav", full.names = TRUE)
 tgs <- file.path(tempdir(), basename(set_textgrid_ext(wavs)))
 
 f_create_silences_textgrid <- wrap_praat_script(
-  praat_location = praat_path,
   script_code_to_run = create_silences_textgrid,
   return = "last-argument"
 )

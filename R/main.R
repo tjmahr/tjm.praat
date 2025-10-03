@@ -1,68 +1,136 @@
 
+#' Get or set the location of the Praat executable
+#'
+#' @param path the full path to the Praat executable
+#' @return the full path to the Praat executable
+#' @export
+#' @details
+#'
+#' `set_praat_location()` sets an R [options()] for
+#' `options("tjm.praat_location")`. `get_praat_location()` retrieves the value
+#' of this option.
+#'
+#' ## Default location
+#'
+#' On package load, this package checks for a pre-existing value in
+#' `options("tjm.praat_location")` and defers to that value. If there is no such value,
+#' this package then searches the system PATH using [Sys.which()] on `"praat"`.
+#' If Praat is not found on the PATH, `NULL` is used.
+#'
+#' A user can set a default location for Praat by 1) adding it to their PATH.
+#' For example, I use a folder called `bin` in my Documents folder. My copy of
+#' Praat.exe lives in this folder, and this folder is on my user PATH on
+#' Windows. Alternatively, a user can 2) add a line like
+#' `options(tjm.praat_location = [value])` to a .Rprofile file so that the
+#' option is set at the start of each R session.
+#'
+#' @rdname praat_location
+set_praat_location <- function(path) {
+  options(tjm.praat_location = normalizePath(path, "/"))
+  getOption("tjm.praat_location")
+}
+
+#' @rdname praat_location
+#' @export
+get_praat_location <- function() {
+  getOption("tjm.praat_location")
+}
+
+
 #' Make a function that runs a Praat script
 #'
-#' @param praat_location path to the Praat executable
-#' @param script_code_to_run Praat script to run
-#' @param return value to return. `"last-argument"` returns the last argument to
+#' @param script_code_to_run a Praat script to run.
+#' @param returning value to return. `"last-argument"` returns the last argument to
 #'   the Praat script. `"info-window"` returns the contents of the Praat Info
 #'   Window.
+#' @param praat_location path to the Praat executable. Defaults to the value
+#'   provided by [get_praat_location()].
 #' @return see `return` argument
 #' @export
 #'
 #' @details This function basically sets up a call to Praat's command-line
 #'   interface using `system2()`.
 wrap_praat_script <- function(
-  praat_location,
   script_code_to_run,
-  return = c("last-argument", "info-window")
+  returning = c("last-argument", "info-window"),
+  praat_location = get_praat_location()
 ) {
-  return <- match.arg(return)
+  returning <- match.arg(returning)
 
   # Make a script file to run
   script_file_to_run <- tempfile(fileext = ".praat")
   writeLines(script_code_to_run, con = script_file_to_run)
 
   f <- function(...) {
-    if (return == "info-window") {
-      # Return what would be printed to InfoWindow
-      results <- system2(
-        praat_location,
-        c(
-          "--utf8", "--run",
-          shQuote(script_file_to_run),
-          vapply(list(...), shQuote, "")
-        ),
-        stdout = TRUE
-      )
-      return(results)
-    } else if (return == "last-argument") {
-      # Return the script's final argument, so that output files can
-      # pipe into other functions
-      results <- system2(
-        praat_location,
-        c(
-          "--utf8", "--run",
-          shQuote(script_file_to_run),
-          vapply(list(...), shQuote, "")
-        )
-      )
-      return(...elt(...length()))
+    args <- as.list(environment(), all = TRUE)
+    args <- args[names(formals())]
+
+    std_out <- if (returning == "info-window") TRUE else ""
+
+    results <- system2(
+      praat_location,
+      c(
+        "--utf8", "--run",
+        shQuote(script_file_to_run),
+        vapply(args, shQuote, "")
+      ),
+      stdout = std_out
+    )
+
+    if (returning == "last-argument") {
+      results <- args[[length(args)]]
     }
+
+    results
   }
+
+  formals(f) <- extract_form_arguments(script_code_to_run)
   class(f) <- c("wrapped_praat_script", "function")
   attr(f, "script") <- script_code_to_run
-  attr(f, "returning") <- return
+  attr(f, "returning") <- returning
   attr(f, "location") <- script_file_to_run
   f
 }
+
+extract_form_arguments <- function(script) {
+  unquote <- function(xs) {
+    xs |>
+      stringr::str_remove("\\W+$") |>
+      stringr::str_remove("^\\W")
+  }
+
+  form_lines <- get_praat_form(script) |>
+    strsplit("\\n") |>
+    getElement(1)
+
+  form_parts <- form_lines[-c(1, length(form_lines))] |>
+    # ignore lines where form has multiple-choice button selection
+    stringr::str_subset("\\s+button", negate = TRUE) |>
+    stringr::str_remove("^\\s+") |>
+    stringr::str_split_fixed("( |, )", 3)
+
+  args <- rep(list(NULL), nrow(form_parts))
+
+  args <- form_parts[, 3] |>
+    unquote() |>
+    as.list() |>
+    lapply(function(x) if (x %in% "") NULL else x)
+
+  names(args) <- form_parts[, 2] |>
+    tolower() |>
+    unquote()
+
+  args
+}
+
 
 #' @export
 print.wrapped_praat_script <- function(x, condense = TRUE, ...) {
   l <- format(x, condense = condense)
   cli::cli({
       cli::cli_text(l$signature)
-      cli::cli_text("# <wrapped_praat_script>")
-      cli::cli_text("# <returning: {.field {l$returning}}>")
+      cli::cli_text("# {.cls wrapped_praat_script}")
+      cli::cli_text("# returning: {.val {l$returning}}")
       cli::cli_code(cli::style_italic(l$script_lines), language = "praat")
     })
   invisible(x)
@@ -70,7 +138,8 @@ print.wrapped_praat_script <- function(x, condense = TRUE, ...) {
 
 #' @export
 format.wrapped_praat_script <- function(x, condense = TRUE, ...) {
-  signature <- format(args(x))[1]
+  signature <- format(args(x))
+  signature <- signature[-length(signature)]
 
   # separate into lines if needed
   script <- attr(x, "script") |>
@@ -142,7 +211,10 @@ set_textgrid_ext <- function(xs) {
 #'   \item{textgrid_out}{path of the textgrid file to create}
 #' }
 #'
-#' @includeRmd inst/demos/create_silences_textgrid.Rmd
+#' @details
+#'
+#' ```{r child = "inst/demos/create_silences_textgrid.Rmd"}
+#' ```
 "create_silences_textgrid"
 
 
@@ -157,7 +229,10 @@ set_textgrid_ext <- function(xs) {
 #'   \item{textgrid_out}{path of the textgrid file to create}
 #' }
 #'
-#' @includeRmd inst/demos/merge_duplicate_intervals.Rmd
+#' @details
+#'
+#' ```{r child = "inst/demos/merge_duplicate_intervals.Rmd"}
+#' ```
 "merge_duplicate_intervals"
 
 
@@ -175,7 +250,10 @@ set_textgrid_ext <- function(xs) {
 #'   \item{textgrid_out}{path of the textgrid file to create}
 #' }
 #'
-#' @includeRmd inst/demos/duplicate_tier.Rmd
+#' @details
+#'
+#' ```{r child = "inst/demos/duplicate_tier.Rmd"}
+#' ```
 "duplicate_tier"
 
 
@@ -195,7 +273,10 @@ set_textgrid_ext <- function(xs) {
 #'   \item{textgrid_out}{path of the textgrid file to create}
 #' }
 #'
-#' @includeRmd inst/demos/convert_tier_to_silences.Rmd
+#' @details
+#'
+#' ```{r child = "inst/demos/convert_tier_to_silences.Rmd"}
+#' ```
 "convert_tier_to_silences"
 
 
@@ -213,6 +294,26 @@ set_textgrid_ext <- function(xs) {
 #'   \item{textgrid_out}{path of the textgrid file to create}
 #' }
 #'
-#' @includeRmd inst/demos/bind_tiers.Rmd
+#' @details
+#'
+#' ```{r child = "inst/demos/bind_tiers.Rmd"}
+#' ```
 "bind_tiers"
+
+
+#' Create a spectrogram
+#'
+#' @format A Praat script
+#' \describe{
+#'   \item{wav_file_in}{path for the wave to read}
+#'   \item{max_frequency}{maximum frequency to show for the spectrogram}
+#'   \item{spectrogram_out}{path of the .Spectrogram file to create}
+#' }
+#'
+#' @details
+#'
+#' ```{r child = "inst/demos/create_spectrogram.Rmd"}
+#' ```
+"create_spectrogram"
+
 

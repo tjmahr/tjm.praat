@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">tjm.praat</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,32 +92,41 @@
 <span><span class="st">  Save as 300-dpi PNG file: png_out$</span></span>
 <span><span class="st">  '</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Now, we can convert this script into an R function. We tell <code><a href="reference/wrap_praat_script.html">wrap_praat_script()</a></code> to return the last argument of the script (<code>png_out$</code> in this example) back to R after the script runs.</p>
+<p>Before we can wrap the script into a function, we need to set the <strong>Praat location</strong>. By default, tjm.praat searches for a location in <code>options("tjm.praat_location")</code> and <code>Sys.which("praat")</code>. So, on my machine, tjm.praat manages to find a Praat executable:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tjmahr/tjm.praat" class="external-link">tjm.praat</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/praat_location.html">get_praat_location</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "C:/Users/trist/Documents/bin/Praat.exe"</span></span></code></pre></div>
+<p>But if I want to set or override this location, I can set the location for the R session. For example, here I point to the copy of Praat.exe on my desktop.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Trying to use a relative path for the demo. </span></span>
+<span><span class="co"># (These are normalized anyways).</span></span>
+<span><span class="fu"><a href="reference/praat_location.html">set_praat_location</a></span><span class="op">(</span><span class="st">"~/../Desktop/Praat.exe"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "C:/Users/trist/Desktop/Praat.exe"</span></span>
 <span></span>
-<span><span class="co"># Find where Praat lives on my machine</span></span>
-<span><span class="va">praat_location</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.which.html" class="external-link">Sys.which</a></span><span class="op">(</span><span class="st">"praat"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">f_draw_textgrid</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span><span class="op">(</span></span>
-<span>  praat_location <span class="op">=</span> <span class="va">praat_location</span>, </span>
+<span><span class="fu"><a href="reference/praat_location.html">get_praat_location</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "C:/Users/trist/Desktop/Praat.exe"</span></span></code></pre></div>
+<p>Now, we can convert this script into an R function. We tell <code><a href="reference/wrap_praat_script.html">wrap_praat_script()</a></code> to return the last argument of the script (<code>png_out$</code> in this example) back to R after the script runs.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">f_draw_textgrid</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span><span class="op">(</span></span>
 <span>  script_code_to_run <span class="op">=</span> <span class="va">script</span>,</span>
 <span>  return <span class="op">=</span> <span class="st">"last-argument"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Now we set up the file arguments to script. First, we need a textgrid file. Let’s use a textgrid bundled with the package. The textgrid shows the results of a forced-alignment on the phrase “bird house”.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tg_in</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
 <span>  <span class="st">"demo-textgrids/birdhouse.TextGrid"</span>, </span>
 <span>  package <span class="op">=</span> <span class="st">"tjm.praat"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>We also need a place to save the image. I’m going to use a temporary file.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">png_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"birdhouse"</span>, fileext <span class="op">=</span> <span class="st">".png"</span><span class="op">)</span></span></code></pre></div>
-<p>Shoot. I just forgot what the arguments are to this script. That’s okay, we can print the function to view the form.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>Shoot. I just forgot what the arguments are to this script. That’s okay, we can <strong>print the function to view the script form</strong>.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_draw_textgrid</span></span>
+<span><span class="co">#&gt; function (textgrid_in = NULL, width = "6", height = "4", png_out = NULL)</span></span>
 <span><span class="co">#&gt; # &lt;wrapped_praat_script&gt;</span></span>
-<span><span class="co">#&gt; # &lt;returning: last-argument&gt;</span></span>
+<span><span class="co">#&gt; # returning: "last-argument"</span></span>
 <span><span class="co">#&gt; form Draw a textgrid</span></span>
 <span><span class="co">#&gt;   sentence Textgrid_in</span></span>
 <span><span class="co">#&gt;   integer Width 6</span></span>
@@ -127,25 +136,37 @@
 <span><span class="co">#&gt; # ... with 6 more lines</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f_draw_textgrid</span>, condense <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; function (textgrid_in = NULL, width = "6", height = "4", png_out = NULL)</span></span>
 <span><span class="co">#&gt; # &lt;wrapped_praat_script&gt;</span></span>
-<span><span class="co">#&gt; # &lt;returning: last-argument&gt;</span></span>
+<span><span class="co">#&gt; # returning: "last-argument"</span></span>
 <span><span class="co">#&gt; form Draw a textgrid</span></span>
 <span><span class="co">#&gt;   sentence Textgrid_in</span></span>
 <span><span class="co">#&gt;   integer Width 6</span></span>
 <span><span class="co">#&gt;   integer Height 4</span></span>
 <span><span class="co">#&gt;   sentence Png_out</span></span>
 <span><span class="co">#&gt; endform</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Read from file: textgrid_in$</span></span>
 <span><span class="co">#&gt; Select outer viewport: 0, width, 0, height</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Draw: 0, 0, "yes", "yes", "yes"</span></span>
 <span><span class="co">#&gt; Save as 300-dpi PNG file: png_out$</span></span></code></pre></div>
 <p>Oh that’s right. <em>Width</em> then <em>height</em>. Now, let’s call the function and view the resulting image.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">f_draw_textgrid</span><span class="op">(</span><span class="va">tg_in</span>, <span class="fl">7</span>, <span class="fl">2</span>, <span class="va">png_out</span><span class="op">)</span></span>
 <span><span class="fu">magick</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span> </span></code></pre></div>
 <p><img src="reference/figures/README-png-demo-1.png" width="100%"></p>
+<p>Note that when we printed the wrapped script’s function, the first line of the output (<strong>the function signature</strong>) included the names of the variables in the Praat form. Indeed, the arguments to this function are set based on the Praat form:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/args.html" class="external-link">args</a></span><span class="op">(</span><span class="va">f_draw_textgrid</span><span class="op">)</span></span>
+<span><span class="co">#&gt; function (textgrid_in = NULL, width = "6", height = "4", png_out = NULL) </span></span>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<p>This feature means that a text’s editor autocomplete/hint system can help us remember the arguments to the Praat script and that we can reorder the arguments in the function call as long as we use the correct names.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">f_draw_textgrid</span><span class="op">(</span></span>
+<span>  png_out <span class="op">=</span> <span class="va">png_out</span>, </span>
+<span>  height <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  width <span class="op">=</span> <span class="fl">7</span>, </span>
+<span>  textgrid_in <span class="op">=</span> <span class="va">tg_in</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-using-bundled-praat-scripts">Example using bundled Praat scripts<a class="anchor" aria-label="anchor" href="#example-using-bundled-praat-scripts"></a>
@@ -158,12 +179,12 @@
 <li>Merged adjacent “silence” intervals and “sounding” intervals together.</li>
 </ol>
 <p>So I wrote a script for each of these steps. The last-argument of each script is a Praat textgrid, so I can pipe these wrapped-script functions into each other.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">f_duplicate</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span><span class="op">(</span><span class="va">praat_location</span>, <span class="va">duplicate_tier</span><span class="op">)</span></span>
-<span><span class="va">f_relabel</span>   <span class="op">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span><span class="op">(</span><span class="va">praat_location</span>, <span class="va">convert_tier_to_silences</span><span class="op">)</span></span>
-<span><span class="va">f_merge</span>     <span class="op">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span><span class="op">(</span><span class="va">praat_location</span>, <span class="va">merge_duplicate_intervals</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">f_duplicate</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span><span class="op">(</span><span class="va">duplicate_tier</span><span class="op">)</span></span>
+<span><span class="va">f_relabel</span>   <span class="op">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span><span class="op">(</span><span class="va">convert_tier_to_silences</span><span class="op">)</span></span>
+<span><span class="va">f_merge</span>     <span class="op">&lt;-</span> <span class="fu"><a href="reference/wrap_praat_script.html">wrap_praat_script</a></span><span class="op">(</span><span class="va">merge_duplicate_intervals</span><span class="op">)</span></span></code></pre></div>
 <p>Let’s apply these scripts to our original example textgrid.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tg_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"demo"</span>, fileext <span class="op">=</span> <span class="st">".TextGrid"</span><span class="op">)</span></span>
 <span><span class="va">png_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"demo"</span>, fileext <span class="op">=</span> <span class="st">".png"</span><span class="op">)</span></span>
 <span></span>
@@ -178,7 +199,7 @@
 <p><img src="reference/figures/README-png-demo-2-1.png" width="100%"></p>
 <p>Now, with a little <a href="https://purrr.tidyverse.org/" class="external-link">purrr</a> magic, we could run this workflow on thousands of textgrids 😉.</p>
 <p>Finally, as a little test, I want to make sure the package works when spaces appear in the file names.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tg_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"demo with spaces in name"</span>, fileext <span class="op">=</span> <span class="st">".TextGrid"</span><span class="op">)</span></span>
 <span><span class="va">png_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"demo with spaces in name"</span>, fileext <span class="op">=</span> <span class="st">".png"</span><span class="op">)</span></span>
 <span></span>
@@ -188,8 +209,13 @@
 <span>  <span class="fu">f_merge</span><span class="op">(</span><span class="st">"pauses"</span>, <span class="va">tg_out</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">png_result</span> <span class="op">&lt;-</span> <span class="fu">f_draw_textgrid</span><span class="op">(</span><span class="va">tg_result</span>, <span class="fl">3.5</span>, <span class="fl">2</span>, <span class="va">png_out</span><span class="op">)</span></span>
-<span><span class="va">png_result</span></span>
-<span><span class="co">#&gt; [1] "C:\\Users\\Tristan\\AppData\\Local\\Temp\\RtmpWgF5OH\\demo with spaces in name3f8d5b7c27.png"</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">png_result</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "demo with spaces in name520478cf5ee7.png"</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
+</h2>
+<p>tjm.praat was created to process data from the <a href="https://kidspeech.wisc.edu/" class="external-link">WISC Lab project</a>. Thus, development of this package was supported by NIH R01DC009411 and NIH R01DC015653.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

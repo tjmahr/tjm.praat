@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">tjm.praat</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,11 +67,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tjmahr/readtextgrid" class="external-link">readtextgrid</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Use the PATH to find praat</span></span>
-<span><span class="va">praat_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.which.html" class="external-link">Sys.which</a></span><span class="op">(</span><span class="st">"praat"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># Locate some wav files</span></span>
-<span></span>
 <span><span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"test-wavs-a/"</span>, package <span class="op">=</span> <span class="st">"tjm.praat"</span><span class="op">)</span></span>
 <span><span class="va">wavs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">dir</span>, pattern <span class="op">=</span> <span class="st">".wav"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -79,7 +75,6 @@
 <span><span class="va">tgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="fu"><a href="../reference/set_textgrid_ext.html">set_textgrid_ext</a></span><span class="op">(</span><span class="va">wavs</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">f_create_silences_textgrid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/wrap_praat_script.html">wrap_praat_script</a></span><span class="op">(</span></span>
-<span>  praat_location <span class="op">=</span> <span class="va">praat_path</span>,</span>
 <span>  script_code_to_run <span class="op">=</span> <span class="va">create_silences_textgrid</span>,</span>
 <span>  return <span class="op">=</span> <span class="st">"last-argument"</span></span>
 <span><span class="op">)</span></span>
@@ -87,28 +82,36 @@
 <span><span class="co"># Apply the function to each wav file and read into R</span></span>
 <span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map2.html" class="external-link">map2_chr</a></span><span class="op">(</span><span class="va">wavs</span>, <span class="va">tgs</span>, <span class="va">f_create_silences_textgrid</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_df</a></span><span class="op">(</span><span class="va">read_textgrid</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 6 x 10</span></span>
-<span><span class="co">#&gt;   file        tier_num tier_name tier_type tier_xmin tier_xmax  xmin  xmax text </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span></span>
-<span><span class="co">#&gt; 1 the_B.Text~        1 silences  Interval~         0       0.6 0     0.464 soun~</span></span>
-<span><span class="co">#&gt; 2 the_B.Text~        1 silences  Interval~         0       0.6 0.464 0.6   sile~</span></span>
-<span><span class="co">#&gt; 3 the_D.Text~        1 silences  Interval~         0       0.6 0     0.464 soun~</span></span>
-<span><span class="co">#&gt; 4 the_D.Text~        1 silences  Interval~         0       0.6 0.464 0.6   sile~</span></span>
-<span><span class="co">#&gt; 5 the_V.Text~        1 silences  Interval~         0       0.6 0     0.464 soun~</span></span>
-<span><span class="co">#&gt; 6 the_V.Text~        1 silences  Interval~         0       0.6 0.464 0.6   sile~</span></span>
+<span><span class="co">#&gt; # A tibble: 13 x 10</span></span>
+<span><span class="co">#&gt;    file       tier_num tier_name tier_type tier_xmin tier_xmax  xmin  xmax text </span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span></span>
+<span><span class="co">#&gt;  1 the_B.Tex~        1 silences  Interval~         0      0.6  0     0.464 soun~</span></span>
+<span><span class="co">#&gt;  2 the_B.Tex~        1 silences  Interval~         0      0.6  0.464 0.6   sile~</span></span>
+<span><span class="co">#&gt;  3 the_D.Tex~        1 silences  Interval~         0      0.6  0     0.464 soun~</span></span>
+<span><span class="co">#&gt;  4 the_D.Tex~        1 silences  Interval~         0      0.6  0.464 0.6   sile~</span></span>
+<span><span class="co">#&gt;  5 the_V.Tex~        1 silences  Interval~         0      0.6  0     0.464 soun~</span></span>
+<span><span class="co">#&gt;  6 the_V.Tex~        1 silences  Interval~         0      0.6  0.464 0.6   sile~</span></span>
+<span><span class="co">#&gt;  7 tidyverse~        1 silences  Interval~         0      3.87 0     0.370 sile~</span></span>
+<span><span class="co">#&gt;  8 tidyverse~        1 silences  Interval~         0      3.87 0.370 1.88  soun~</span></span>
+<span><span class="co">#&gt;  9 tidyverse~        1 silences  Interval~         0      3.87 1.88  2.40  sile~</span></span>
+<span><span class="co">#&gt; 10 tidyverse~        1 silences  Interval~         0      3.87 2.40  3.18  soun~</span></span>
+<span><span class="co">#&gt; 11 tidyverse~        1 silences  Interval~         0      3.87 3.18  3.28  sile~</span></span>
+<span><span class="co">#&gt; 12 tidyverse~        1 silences  Interval~         0      3.87 3.28  3.50  soun~</span></span>
+<span><span class="co">#&gt; 13 tidyverse~        1 silences  Interval~         0      3.87 3.50  3.87  sile~</span></span>
 <span><span class="co">#&gt; # i 1 more variable: annotation_num &lt;int&gt;</span></span></code></pre><p></p></div>
     </div>
     <div class="section level2">
     <h2 id="praat-source-code">Praat source code<a class="anchor" aria-label="anchor" href="#praat-source-code"></a></h2>
-    <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># &lt;wrapped_praat_script&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># &lt;returning: last-argument&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>form Make silence textgrid</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    sentence Wav_file_in</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    sentence Textgrid_out</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>endform</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>Read from file<span class="sc">:</span> wav_file_in<span class="sc">$</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>To <span class="fu">TextGrid</span> (silences)<span class="sc">:</span> <span class="dv">100</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">25</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="st">"silent"</span>, <span class="st">"sounding"</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>Save as text file<span class="sc">:</span> textgrid_out<span class="sc">$</span></span></code></pre><p></p></div>
+    <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span> (<span class="at">wav_file_in =</span> <span class="cn">NULL</span>, <span class="at">textgrid_out =</span> <span class="cn">NULL</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># &lt;wrapped_praat_script&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># returning: "last-argument"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>form Make silence textgrid</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    sentence Wav_file_in</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    sentence Textgrid_out</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>endform</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>Read from file<span class="sc">:</span> wav_file_in<span class="sc">$</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>To <span class="fu">TextGrid</span> (silences)<span class="sc">:</span> <span class="dv">100</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">25</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="st">"silent"</span>, <span class="st">"sounding"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>Save as text file<span class="sc">:</span> textgrid_out<span class="sc">$</span></span></code></pre><p></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

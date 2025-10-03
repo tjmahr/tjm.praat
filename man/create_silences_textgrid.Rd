@@ -22,11 +22,7 @@ Create a silences textgrid
 library(purrr)
 library(readtextgrid)
 
-# Use the PATH to find praat
-praat_path <- Sys.which("praat")
-
 # Locate some wav files
-
 dir <- system.file("test-wavs-a/", package = "tjm.praat")
 wavs <- list.files(dir, pattern = ".wav", full.names = TRUE)
 
@@ -34,7 +30,6 @@ wavs <- list.files(dir, pattern = ".wav", full.names = TRUE)
 tgs <- file.path(tempdir(), basename(set_textgrid_ext(wavs)))
 
 f_create_silences_textgrid <- wrap_praat_script(
-  praat_location = praat_path,
   script_code_to_run = create_silences_textgrid,
   return = "last-argument"
 )
@@ -42,23 +37,30 @@ f_create_silences_textgrid <- wrap_praat_script(
 # Apply the function to each wav file and read into R
 map2_chr(wavs, tgs, f_create_silences_textgrid) \%>\%
   map_df(read_textgrid)
-#> # A tibble: 6 x 10
-#>   file        tier_num tier_name tier_type tier_xmin tier_xmax  xmin  xmax text 
-#>   <chr>          <dbl> <chr>     <chr>         <dbl>     <dbl> <dbl> <dbl> <chr>
-#> 1 the_B.Text~        1 silences  Interval~         0       0.6 0     0.464 soun~
-#> 2 the_B.Text~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
-#> 3 the_D.Text~        1 silences  Interval~         0       0.6 0     0.464 soun~
-#> 4 the_D.Text~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
-#> 5 the_V.Text~        1 silences  Interval~         0       0.6 0     0.464 soun~
-#> 6 the_V.Text~        1 silences  Interval~         0       0.6 0.464 0.6   sile~
+#> # A tibble: 13 x 10
+#>    file       tier_num tier_name tier_type tier_xmin tier_xmax  xmin  xmax text 
+#>    <chr>         <dbl> <chr>     <chr>         <dbl>     <dbl> <dbl> <dbl> <chr>
+#>  1 the_B.Tex~        1 silences  Interval~         0      0.6  0     0.464 soun~
+#>  2 the_B.Tex~        1 silences  Interval~         0      0.6  0.464 0.6   sile~
+#>  3 the_D.Tex~        1 silences  Interval~         0      0.6  0     0.464 soun~
+#>  4 the_D.Tex~        1 silences  Interval~         0      0.6  0.464 0.6   sile~
+#>  5 the_V.Tex~        1 silences  Interval~         0      0.6  0     0.464 soun~
+#>  6 the_V.Tex~        1 silences  Interval~         0      0.6  0.464 0.6   sile~
+#>  7 tidyverse~        1 silences  Interval~         0      3.87 0     0.370 sile~
+#>  8 tidyverse~        1 silences  Interval~         0      3.87 0.370 1.88  soun~
+#>  9 tidyverse~        1 silences  Interval~         0      3.87 1.88  2.40  sile~
+#> 10 tidyverse~        1 silences  Interval~         0      3.87 2.40  3.18  soun~
+#> 11 tidyverse~        1 silences  Interval~         0      3.87 3.18  3.28  sile~
+#> 12 tidyverse~        1 silences  Interval~         0      3.87 3.28  3.50  soun~
+#> 13 tidyverse~        1 silences  Interval~         0      3.87 3.50  3.87  sile~
 #> # i 1 more variable: annotation_num <int>
 }\if{html}{\out{</div>}}
 }
 
 \section{Praat source code}{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{function (...)
+\if{html}{\out{<div class="sourceCode">}}\preformatted{function (wav_file_in = NULL, textgrid_out = NULL)
 # <wrapped_praat_script>
-# <returning: last-argument>
+# returning: "last-argument"
 form Make silence textgrid
     sentence Wav_file_in
     sentence Textgrid_out

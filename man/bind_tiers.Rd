@@ -24,9 +24,6 @@ them onto another other one.
 \section{Example usage}{
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(tjm.praat)
 
-# Use the PATH to find praat
-praat_path <- Sys.which("praat")
-
 # The two textgrids we want to bind together
 tg <- system.file(
   "demo-textgrids/birdhouse.TextGrid",
@@ -50,9 +47,8 @@ unique(tg2_data$tier_name)
 #> [1] "p2fa-words"  "p2fa-phones"
 
 f_bind_tiers <- wrap_praat_script(
-  praat_location = praat_path,
   script_code_to_run = bind_tiers,
-  return = "last-argument"
+  returning = "last-argument"
 )
 
 tg_out <- f_bind_tiers(tg, tg2, "p2fa-words,p2fa-phones", tg_out)
@@ -64,9 +60,11 @@ unique(tg_out_data$tier_name)
 }
 
 \section{Praat source code}{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{function (...)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{print(f_bind_tiers, condense = FALSE)
+function (textgrid_receiver = NULL, textgrid_sender = NULL, tiers_to_pull =
+NULL, textgrid_out = NULL)
 # <wrapped_praat_script>
-# <returning: last-argument>
+# returning: "last-argument"
 form Copy tiers from one textgrid (sender) onto another (reciever)
   sentence Textgrid_receiver
   sentence Textgrid_sender

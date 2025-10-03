@@ -3,9 +3,6 @@
 ```{r, eval = TRUE, comment = "#>", collapse = TRUE}
 library(tjm.praat)
 
-# Use the PATH to find praat
-praat_path <- Sys.which("praat")
-
 tg <- system.file(
   "demo-textgrids/merge-duplicate-intervals.TextGrid",
   package = "tjm.praat"
@@ -20,9 +17,8 @@ tg |>
   unique()
 
 f_duplicate_tier <- wrap_praat_script(
-  praat_location = praat_path,
   script_code_to_run = duplicate_tier,
-  return = "last-argument"
+  returning = "last-argument"
 )
 
 tg_out <- tg |> 
@@ -41,7 +37,7 @@ tg_out |>
 
 # Praat source code
 
-```{r, echo = FALSE, comment = ""}
+```{r, echo = TRUE, comment = ""}
 print(f_duplicate_tier, condense = FALSE)
 ```
 

@@ -26,9 +26,6 @@ All others are replaced with \code{"sounding"}.
 \section{Example usage}{
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(tjm.praat)
 
-# Use the PATH to find praat
-praat_path <- Sys.which("praat")
-
 tg <- system.file(
   "demo-textgrids/merge-duplicate-intervals.TextGrid",
   package = "tjm.praat"
@@ -54,9 +51,8 @@ tg_data[tg_data$tier_num == 2, c("tier_name", "xmin", "xmax", "text")]
 #> 10 phones     1.39  1.41 ""
 
 f_convert_tier_to_silences <- wrap_praat_script(
-  praat_location = praat_path,
   script_code_to_run = convert_tier_to_silences,
-  return = "last-argument"
+  returning = "last-argument"
 )
 
 tg_data2 <- tg |> 
@@ -81,9 +77,11 @@ tg_data2[tg_data2$tier_num == 2, c("tier_name", "xmin", "xmax", "text")]
 }
 
 \section{Praat source code}{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{function (...)
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{print(f_convert_tier_to_silences, condense = FALSE)
+function (textgrid_in = NULL, target_tier = "phones", silence_regex =
+"$|sil|sp", textgrid_out = NULL)
 # <wrapped_praat_script>
-# <returning: last-argument>
+# returning: "last-argument"
 form Convert annotations into "silence" and "sounding"
   sentence Textgrid_in
   sentence Target_tier phones
@@ -111,9 +109,6 @@ procedure findNumberForTier: .target_tier$
   endfor
 endproc
 }\if{html}{\out{</div>}}
-
-[tg_data$tier_num == 2, c("tier_name", "xmin", "xmax", "text")]: R:tg_data$tier_num\%20==\%202,\%20c(\%22tier_name\%22,\%20\%22xmin\%22,\%20\%22xmax\%22,\%20\%22text\%22)
-[tg_data2$tier_num == 2, c("tier_name", "xmin", "xmax", "text")]: R:tg_data2$tier_num\%20==\%202,\%20c(\%22tier_name\%22,\%20\%22xmin\%22,\%20\%22xmax\%22,\%20\%22text\%22)
 }
 
 \keyword{datasets}

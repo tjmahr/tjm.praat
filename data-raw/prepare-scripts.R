@@ -23,27 +23,30 @@ snips_list <- snips %>%
 
 # Write out untransformed scripts
 create_silences_textgrid <- snips_list$`create-silences-textgrid` %T>%
-  writeLines("data-raw/create-silences-textgrid.praat")
+  writeLines("data-raw/generated-scripts/create-silences-textgrid.praat")
 
 normalize_textgrid <- snips_list$`normalize-textgrid` %T>%
-  writeLines("data-raw/normalize-textgrid.praat")
+  writeLines("data-raw/generated-scripts/normalize-textgrid.praat")
+
+create_spectrogram <- snips_list$`create-spectrogram` %T>%
+  writeLines("data-raw/generated-scripts/create-silences-textgrid.praat")
 
 # Fill in placeholder code in the snips
 merge_duplicate_intervals <- snips_list$`merge-duplicate-intervals` %>%
   glue::glue_data(snips_list, .) %T>%
-  writeLines("data-raw/merge-duplicate-intervals.praat")
+  writeLines("data-raw/generated-scripts/merge-duplicate-intervals.praat")
 
 duplicate_tier <- snips_list$`duplicate-tier` %>%
   glue::glue_data(snips_list, .) %T>%
-  writeLines("data-raw/duplicate-tier.praat")
+  writeLines("data-raw/generated-scripts/duplicate-tier.praat")
 
 convert_tier_to_silences <- snips_list$`convert-tier-to-silences` %>%
   glue::glue_data(snips_list, .) %T>%
-  writeLines("data-raw/convert_tier_to_silences.praat")
+  writeLines("data-raw/generated-scripts/convert_tier_to_silences.praat")
 
 bind_tiers <- snips_list$`bind-tiers` %>%
   glue::glue_data(snips_list, .) %T>%
-  writeLines("data-raw/bind-tiers.praat")
+  writeLines("data-raw/generated-scripts/bind-tiers.praat")
 
 
 
@@ -53,3 +56,4 @@ usethis::use_data(merge_duplicate_intervals, overwrite = TRUE)
 usethis::use_data(duplicate_tier, overwrite = TRUE)
 usethis::use_data(convert_tier_to_silences, overwrite = TRUE)
 usethis::use_data(bind_tiers, overwrite = TRUE)
+usethis::use_data(create_spectrogram, overwrite = TRUE)
